@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://waibizi.github.io/"/>
-  <updated>2020-06-09T10:27:31.553Z</updated>
+  <updated>2020-06-09T10:57:40.498Z</updated>
   <id>https://waibizi.github.io/</id>
   
   <author>
@@ -21,15 +21,15 @@
     <link href="https://waibizi.github.io/2020/06/09/%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87/"/>
     <id>https://waibizi.github.io/2020/06/09/%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87/</id>
     <published>2020-06-09T10:22:30.000Z</published>
-    <updated>2020-06-09T10:27:31.553Z</updated>
+    <updated>2020-06-09T10:57:40.498Z</updated>
     
-    <content type="html"><![CDATA[<p><img src="/.io//%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87%5Cmirror.jpg" alt="mirror"></p>]]></content>
+    <content type="html"><![CDATA[<p><img src="/mirror.jpg" alt="mirror"></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;&lt;img src=&quot;/.io//%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87%5Cmirror.jpg&quot; alt=&quot;mirror&quot;&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;img src=&quot;/mirror.jpg&quot; alt=&quot;mirror&quot;&gt;&lt;/p&gt;
 
       
     
@@ -46,14 +46,13 @@
     <published>2020-06-09T10:00:30.000Z</published>
     <updated>2020-06-09T10:18:51.776Z</updated>
     
-    <content type="html"><![CDATA[<p> <img src="/.io//..........%5Csource%5Cimage%5Cmirror.jpg" alt="Alt text"></p>]]></content>
+    <content type="html"><![CDATA[<p> <img src="/2020/06/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%9C%89%E4%B8%BB%E9%A2%98%E7%9A%84%E6%96%87%E7%AB%A0%E5%93%A6/..........%5Csource%5Cimage%5Cmirror.jpg" alt="Alt text"></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt; &lt;img src=&quot;/.io//..........%5Csource%5Cimage%5Cmirror.jpg&quot; alt=&quot;Alt text&quot;&gt;&lt;/p&gt;
-
+        &lt;p&gt; &lt;img src=&quot;/2020/06/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%9C%89%E4%B8%BB%E9%A2%98%E7%9A%84%E6%96%87%E7%AB%A0%E5%93%A6/..........%5Csource%5Ci
       
     
     </summary>
