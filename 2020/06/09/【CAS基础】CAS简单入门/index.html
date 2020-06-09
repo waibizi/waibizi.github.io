@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【CAS基础】CAS简单入门 - 歪鼻子</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="waibizi,"> 
+    <meta name="description" content="1.CAS概念  首先，跟大家强调一下，CAS是一种思想！！一种思想！！一种思想！！！（重要的话说三次）
+  CAS的的英文全称Compare-and-Swap，中文名称叫做比较并交换，一种才不采用,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="歪鼻子" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">歪鼻子</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://waibizi.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">【CAS基础】CAS简单入门</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">【CAS基础】CAS简单入门</h1>
+        <div class="stuff">
+            <span>六月 09, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="1-CAS概念"><a href="#1-CAS概念" class="headerlink" title="1.CAS概念"></a>1.CAS概念</h2><p>  首先，跟大家强调一下，CAS是一种思想！！一种思想！！一种思想！！！（重要的话说三次）</p>
+<p>  CAS的的英文全称Compare-and-Swap，中文名称叫做比较并交换，一种才不采用强制性锁机制下的一种值更新策略；在并发的情况下，挺多情况是直接synchronized跟voliate或者其他锁机制实现并发时保证数据一致性的;</p>
+<h2 id="2-CAS的一个小Demo"><a href="#2-CAS的一个小Demo" class="headerlink" title="2.CAS的一个小Demo"></a>2.CAS的一个小Demo</h2><p>  CAS呢，底层是在unsafe类当中的，但是JDK当中有许多类都会采用CAS去保障数据的并发问题，我们简单看一个并发包当中的类，然后去认识CAS吧;</p>
+<img src="/2020/06/09/%E3%80%90CAS%E5%9F%BA%E7%A1%80%E3%80%91CAS%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/1.png" class title="This is an image">
+
+<center>这是一个安全的int，我初始化这个int为5，然后采用了
+
+<center>AtomicInteger的CAS实现
+
+<center>大概就是expect期望值是5的话，把值改为update的值
+
+
+
+<center>然后我们就简单进去源码看下吧····
+
+<img src="/2020/06/09/%E3%80%90CAS%E5%9F%BA%E7%A1%80%E3%80%91CAS%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/2.png" class title="This is an image">
+
+
+
+<p>参数的意思:</p>
+<p>this：当前对象</p>
+<p>valueOffset：内存地址</p>
+<p>expect：期待值</p>
+<p>update：更新值</p>
+<p>再往下看就不是我们此时关注的重点啦，因为再往下就是unsafe类</p>
+<p>这个类我会的后续再写一篇介绍</p>
+<p>（真的是太多了）</p>
+<h2 id="3-CAS的缺点以及ABA问题"><a href="#3-CAS的缺点以及ABA问题" class="headerlink" title="3.CAS的缺点以及ABA问题"></a>3.CAS的缺点以及ABA问题</h2><p>  <font color="#7B68EE" size="5">无锁机制固然好，但是有一些比较明显的缺点也随着带来了，我们先来简单说一下CAS当中自旋出现的问题;</font></p>
+<p>假设我现在有两个线程：线程A与线程B，然后有一个变量，表示的是卡上的余额;</p>
+<p>线程A，此时知道的初始值是50元，线程B也是晓得此时初始值是50元：</p>
+<p>线程A想把50更新为100，线程B想把50更新为零，那么此时线程A与线程B的“期望值”都是50，线程A的运气比较好，先抢占到时间片，开始更新数据，并且更新数据成功。而线程B因为一些中间处理操作，需要时间等待，此时拿着期望值“50”，进行CAS比较交换的时候，发现期望值无效，于是重新获取了一次最新的“真实值”，然后很不凑巧，线程A此时又想修改值，而且时间片也被线程A抢占了，线程A此时拿着最新的期望值是“100”，又更新成功了，把值重新改回50，而线程B这倒霉蛋又拿着期望值为“100”的，想过来修改值，又没办法修改···</p>
+<p>如果线程B一直运气不好，抢不到时间片，就会导致线程B一直处于自旋的状态···</p>
+<p>【ABA问题】</p>
+<p>ABA问题比较好理解</p>
+<p>  1.线程A，期望值是50，欲更新值为100</p>
+<p>  2.线程B，期望值是50，欲更新值为100</p>
+<p>  线程A首先拿到时间片，进行值的更新，此时线程B因为某些问题（阻塞了一段时间），没有抢占到时间片。此时A更新了值了，然后突然来了一个线程C，比线程B先抢占到了时间片（线程B挺可怜的），此时线程C的期望值是100，欲修改值是50，CAS执行成功了，此时线程B终于阻塞完了，拿着期望值为50，更新值为100的操作姗姗来迟，此时CAS也成功了。可是线程B并不知道他自己修改了的值是经过了50-&gt;100-&gt;50-&gt;100。除开掉前面的50是初始值，100,50,100三个数就是ABA的代表，可以将100替换为A理解，50替换为B理解。</p>
+<p>这个ABA会导致什么问题的出现呢？</p>
+<p>如果说此时我的银行卡收入了50元，卡内原先余额为50元，此时就要更新为100元，由于一些比较特殊的原因（难不成是工程师的锅），此时50欲更新为100有两条线程，就跟上面例子一样;然后此时突然我的女朋友想要花我的银行卡的钱，我的银行卡也需要扣费了，三个线程出现了上面那种执行顺序问题，我的卡此时不就白白赚了50块钱了吗？（可能例子不大恰当，但是ABA当中就是这种问题的发生）</p>
+</center></center></center></center>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://m801.music.126.net/20200609180439/322e116032c67ed12ea86f8cc1852cc6/jdyyaac/5658/510b/515a/a2163f6eeefa7f2eda60f0a601e95826.m4a'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o='歪鼻子'
+        data-a='waibizi'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-CAS概念"><span class="toc-number">1.</span> <span class="toc-text">1.CAS概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-CAS的一个小Demo"><span class="toc-number">2.</span> <span class="toc-text">2.CAS的一个小Demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-CAS的缺点以及ABA问题"><span class="toc-number">3.</span> <span class="toc-text">3.CAS的缺点以及ABA问题</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
