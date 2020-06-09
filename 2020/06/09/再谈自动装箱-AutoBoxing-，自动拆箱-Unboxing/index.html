@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>再谈自动装箱(AutoBoxing)，自动拆箱(Unboxing) - 歪鼻子</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="waibizi,"> 
+    <meta name="description" content="1.基础概念  自动装箱就是自动将基本数据类型转换为包装器类型；自动拆箱就是自动将包装器类型转换为基本数据类型。
+  ps：Integer自动转换为int类型，这个就是自动拆箱的过程，int自动转换,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="歪鼻子" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">歪鼻子</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://waibizi.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">再谈自动装箱(AutoBoxing)，自动拆箱(Unboxing)</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">再谈自动装箱(AutoBoxing)，自动拆箱(Unboxing)</h1>
+        <div class="stuff">
+            <span>六月 09, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="1-基础概念"><a href="#1-基础概念" class="headerlink" title="1.基础概念"></a>1.基础概念</h2><p>  自动装箱就是自动将基本数据类型转换为<strong>包装器类型</strong>；自动拆箱就是自动将包装器类型转换为<strong>基本数据类型</strong>。</p>
+<p>  ps：Integer自动转换为<strong><font color=" #FF8C00">int</font></strong>类型，这个就是自动拆箱的过程，int自动转换为Integer就是装箱的过程。</p>
+<img src="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/1.png" class title="This is an image">
+
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2.原理"></a>2.原理</h2><p>  概念不难理解，不如尝试反编译一下，看下底层是什么什么吧。</p>
+<p>  废话少说，直接动手肝</p>
+<p>点击查看大图</p>
+<img src="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/2.png" class title="This is an image">
+
+<p>  通过<strong><font color=" #FF8C00">反编译字节码</font></strong>可以很明显地看到一些效果，将<strong><font color=" #FF8C00">装箱与拆箱</font></strong>的过程反映了出来。</p>
+<h2 id="3-自动装箱与拆箱的一些验证"><a href="#3-自动装箱与拆箱的一些验证" class="headerlink" title="3.自动装箱与拆箱的一些验证"></a>3.自动装箱与拆箱的一些验证</h2><img src="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/3.png" class title="This is an image">
+
+<p>打印结果是<strong><font color=" #FF8C00">true</font></strong>，此步进行了自动拆箱操作</p>
+<p><font color="#00FA9A">拆箱</font>的验证，可以通过<font color="#00FA9A">字节码</font>看到</p>
+<img src="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/4.png" class title="This is an image">
+
+<p>再来一次，这次使用<font color="#00FA9A">equals</font>,可以看到是装箱了</p>
+<img src="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/5.png" class title="This is an image">
+
+<p>具体原因是因为jdk内部使用equals的时候，传入是Object，int类型赋值到Object的时候是装箱的过程</p>
+<img src="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/6.png" class title="This is an image">
+
+<p><strong>小结</strong></p>
+<p>1.自动装箱与自动装箱虽然在使用当中可以省略很多不用考虑的因素，但是这是因为Java自己做了这部分的工作（只是你看不到）;</p>
+<p>2.大量使用自动装箱会影响一部分的性能（因为要生成Object类型）;</p>
+<p>3.采用‘==’与‘equals’的时候，自动装箱与自动拆箱的原因为啥不同;</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://m801.music.126.net/20200609180439/322e116032c67ed12ea86f8cc1852cc6/jdyyaac/5658/510b/515a/a2163f6eeefa7f2eda60f0a601e95826.m4a'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o='歪鼻子'
+        data-a='waibizi'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-基础概念"><span class="toc-number">1.</span> <span class="toc-text">1.基础概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-原理"><span class="toc-number">2.</span> <span class="toc-text">2.原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-自动装箱与拆箱的一些验证"><span class="toc-number">3.</span> <span class="toc-text">3.自动装箱与拆箱的一些验证</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
