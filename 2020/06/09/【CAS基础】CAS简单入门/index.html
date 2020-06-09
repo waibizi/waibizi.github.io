@@ -68,15 +68,15 @@
 <h2 id="2-CAS的一个小Demo"><a href="#2-CAS的一个小Demo" class="headerlink" title="2.CAS的一个小Demo"></a>2.CAS的一个小Demo</h2><p>  CAS呢，底层是在unsafe类当中的，但是JDK当中有许多类都会采用CAS去保障数据的并发问题，我们简单看一个并发包当中的类，然后去认识CAS吧;</p>
 <img src="/2020/06/09/%E3%80%90CAS%E5%9F%BA%E7%A1%80%E3%80%91CAS%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/1.png" class title="This is an image">
 
-<center>这是一个安全的int，我初始化这个int为5，然后采用了
+<center>这是一个安全的int，我初始化这个int为5，然后采用了</center>
 
-<center>AtomicInteger的CAS实现
+<center>AtomicInteger的CAS实现</center>
 
-<center>大概就是expect期望值是5的话，把值改为update的值
+<center>大概就是expect期望值是5的话，把值改为update的值</center>
 
 
 
-<center>然后我们就简单进去源码看下吧····
+<center>然后我们就简单进去源码看下吧····</center>
 
 <img src="/2020/06/09/%E3%80%90CAS%E5%9F%BA%E7%A1%80%E3%80%91CAS%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/2.png" class title="This is an image">
 
@@ -85,7 +85,7 @@
 <p>参数的意思:</p>
 <p><font color=" #FF8C00">this</font>：当前对象</p>
 <p><font color=" #FF8C00">valueOffset</font>：内存地址</p>
-<p><font color=" #FF8C00">expec</font>t：期待值</p>
+<p><font color=" #FF8C00">expect</font>：期待值</p>
 <p><font color=" #FF8C00">update</font>：更新值</p>
 <p>再往下看就不是我们此时关注的重点啦，因为再往下就是unsafe类</p>
 <p>这个类我会的后续再写一篇介绍</p>
@@ -102,7 +102,7 @@
 <p>  线程A首先拿到时间片，进行值的更新，此时线程B因为某些问题（阻塞了一段时间），没有抢占到时间片。此时A更新了值了，然后突然来了一个线程C，比线程B先抢占到了时间片（线程B挺可怜的），此时线程C的期望值是100，欲修改值是50，CAS执行成功了，此时线程B终于阻塞完了，拿着期望值为50，更新值为100的操作姗姗来迟，此时CAS也成功了。可是线程B并不知道他自己修改了的值是经过了50-&gt;100-&gt;50-&gt;100。除开掉前面的50是初始值，100,50,100三个数就是ABA的代表，可以将100替换为A理解，50替换为B理解。</p>
 <p>这个ABA会导致什么问题的出现呢？</p>
 <p>如果说此时我的银行卡收入了50元，卡内原先余额为50元，此时就要更新为100元，由于一些比较特殊的原因（难不成是工程师的锅），此时50欲更新为100有两条线程，就跟上面例子一样;然后此时突然我的女朋友想要花我的银行卡的钱，我的银行卡也需要扣费了，三个线程出现了上面那种执行顺序问题，我的卡此时不就白白赚了50块钱了吗？（可能例子不大恰当，但是ABA当中就是这种问题的发生）</p>
-</center></center></center></center>
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
                 <source type="audio/mpeg" src="">
