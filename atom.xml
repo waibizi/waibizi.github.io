@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://waibizi.github.io/"/>
-  <updated>2020-06-09T10:57:40.498Z</updated>
+  <updated>2020-06-09T11:42:42.323Z</updated>
   <id>https://waibizi.github.io/</id>
   
   <author>
@@ -21,15 +21,16 @@
     <link href="https://waibizi.github.io/2020/06/09/%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87/"/>
     <id>https://waibizi.github.io/2020/06/09/%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87/</id>
     <published>2020-06-09T10:22:30.000Z</published>
-    <updated>2020-06-09T10:57:40.498Z</updated>
+    <updated>2020-06-09T11:42:42.323Z</updated>
     
-    <content type="html"><![CDATA[<p><img src="/mirror.jpg" alt="mirror"></p>]]></content>
+    <content type="html"><![CDATA[<img src="/2020/06/09/%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87/mirror.jpg" class title="This is an example image">]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;&lt;img src=&quot;/mirror.jpg&quot; alt=&quot;mirror&quot;&gt;&lt;/p&gt;
+        &lt;img src=&quot;/2020/06/09/%E5%B0%9D%E8%AF%95%E5%9B%BE%E7%89%87/mirror.jpg&quot; class title=&quot;This is an example image&quot;&gt;
+
 
       
     
