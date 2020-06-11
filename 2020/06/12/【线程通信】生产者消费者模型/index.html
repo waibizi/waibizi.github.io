@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【线程通信】生产者消费者模型 - 歪鼻子</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="waibizi,"> 
+    <meta name="description" content="1.生产者消费者模型介绍  生产者消费者模型，是每一个学习多线程的的人都需要知道的模型;
+大致情况就是：有两个线程，一个负责生产产品，一个消费产品，两者公用同一块内存区域，也就是产品放在了同一块内存,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="歪鼻子" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">歪鼻子</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://waibizi.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">【线程通信】生产者消费者模型</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">【线程通信】生产者消费者模型</h1>
+        <div class="stuff">
+            <span>六月 12, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="1-生产者消费者模型介绍"><a href="#1-生产者消费者模型介绍" class="headerlink" title="1.生产者消费者模型介绍"></a>1.生产者消费者模型介绍</h2><p>  <font color=" #FF8C00">生产者消费者模型，</font>是每一个学习多线程的的人都需要知道的模型;</p>
+<p>大致情况就是：有两个线程，一个负责生产产品，一个消费产品，两者公用同一块内存区域，也就是产品放在了同一块内存上面，如果两个线程没有采用一定的措施或者采用的策略错误的情况下，容易出现一系列的问题，例如数据一致性问题，死锁问题;</p>
+<img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/1.png" class title="This is an image">
+
+<h2 id="2-为什么需要生产者消费者模型"><a href="#2-为什么需要生产者消费者模型" class="headerlink" title="2.为什么需要生产者消费者模型"></a>2.为什么需要生产者消费者模型</h2><p>  在多线程世界里，生产者就是生产数据的线程，消费者就是消费数据的线程;如果生产者处理速度很快，而消费者处理速度很慢，那么生产者就必须等待消费者处理完，才能继续生产数据;同样的道理，如果消费者的处理能力大于生产者，那么消费者就必须等待生产者;为了解决这个问题于是引入了生产者和消费者模式。</p>
+<h2 id="3-生产者-消费者模型（线程阻塞，线程唤醒）"><a href="#3-生产者-消费者模型（线程阻塞，线程唤醒）" class="headerlink" title="3.生产者-消费者模型（线程阻塞，线程唤醒）"></a>3.生产者-消费者模型（线程阻塞，线程唤醒）</h2><p>  举例：线程1去奶茶，没有奶茶了，它就不执行了;线程二生产奶茶，通知线程1继续执行;</p>
+<p>下面这个例子不大好，使用了Java线程已经抛弃的方法</p>
+<img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/2.png" class title="This is an image">
+
+<p>打印结果如下，最开始没奶茶，后来有了奶茶通知了挂起的线程，那个线程就得以继续执行</p>
+<center><img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/3.png" class title="This is an image"></center>
+
+<p>上面这个就是经典的生产者-消费者模型，但是为啥这个例子当中的线程方法被弃用了呢？往下看一个例子</p>
+<center>suspend和resume加锁导致死锁</center>
+
+<img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/4.png" class title="This is an image">
+
+<center>打印结果</center>
+
+<center><img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/5.png" class title="This is an image"></center>
+
+<p>这个线程不用等了，一直都是在这里挂起了，竞争不到锁，没办法通知挂起的线程继续执行;</p>
+<p>如果suspend比resume慢执行，也会导致线程永久挂起</p>
+<img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/6.png" class title="This is an image">
+
+<center>打印结果，通知完了，那边才开始挂起</center>
+
+<center><img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/7.png" class title="This is an image"></center>
+
+
+
+<center>那么Java现在推荐哪一种方式进行使用呢~</center>
+
+<center>wait/notify机制</center>
+
+<p>这个机制要求这两个方法只能由同一对象锁的持有者线程进行调用，也就是卸载同步代码块里面，否则会抛出</p>
+<center>IllegalMonitorStateException异常</center>
+
+
+
+<p>wait方法导致当前的线程进入等待状态，加入该对象的等待集合中，并发放弃当前持有的对象锁;</p>
+<p>notify/notifyAll方法唤醒一个或所有正在等待这个对象锁的线程;</p>
+<p>注意：虽然会wait自动解锁，但是对顺序有要求，如果在notify被调用之后才开始wait方法的调用，线程会永远处于WAITING状态</p>
+<center>先来一个正常的演示（打印跟前面正常的一致）</center>
+
+
+<img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/8.png" class title="This is an image">
+
+<center>可以看到，如果是suspend/resume的话，这个程序是会导致死锁的，可是这里采用的是wait/notify机制，会自动释放锁</center>
+
+
+
+<center>如果notify比waiting先执行</center>
+
+<center>那么会导致线程一直处于WAITING的状态</center>
+
+<img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/9.png" class title="This is an image">
+
+<center></center>说个题外话，我觉得这个就跟你的女神已经通知你，我们不可能在一起了，然后你还一直在等待
+
+
+
+<center>还有另外一个机制</center>
+
+<center><font color=" #FF8C00">park/unpark机制</font></center>
+
+<center>park表示等待一个“许可”</center>
+
+<center>unpark表示授予一个"许可"</center>
+
+
+
+
+
+<center>park/unpark机制有一个好处就是如果提前颁发“许可”了</center>
+
+<center>也不会导致线程一直处于挂起或者是死锁的转态</center>
+
+<center>但是它不会主动去释放锁</center>
+
+<center>unpark比park提前执行的例子</center>
+
+<center><img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/10.png" class title="This is an image"></center>
+
+<center>加锁导致死锁的例子</center>
+
+<center><img src="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/11.png" class title="This is an image"></center>
+
+<center><font color=" #00FA9A">【总结】</font></center>
+
+<center><font color=" #FF8C00">suspend/resume机制</font></center>
+
+<center>resume先执行，suspend慢执行;resume/suspend加锁;都会导致死锁</center>
+
+
+
+<center>wait/notify机制</center>
+
+<center>wait/notify加锁了会自动释放锁，但是notify比wait先执行依然会线程永久挂起</center>
+
+
+<center><font color=" #FF8C00">park/unpark机制</font></center>
+
+<p>park/unpark不会自动释放锁，但是先后执行顺序不会导致线程永久挂起</p>
+<center><font color=" #FF8C00">【提醒】</font></center>
+
+<center><font color=" #FF8C00">代码当中使用if语句来判断是否进入等待状态</font></center>
+
+<center>是错误的</center>
+
+<center>官方建议是采用<font color="#00FA9A">while</font>情况下，判断是否可以将线程挂起</center>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://sharefs.yun.kugou.com/202006101903/701f75cb5d46d0e435028cfdb4fcaaec/G170/M07/16/11/SocBAF3H3aqAUYOEADmpdloW3bU827.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o='歪鼻子'
+        data-a='waibizi'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-生产者消费者模型介绍"><span class="toc-number">1.</span> <span class="toc-text">1.生产者消费者模型介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-为什么需要生产者消费者模型"><span class="toc-number">2.</span> <span class="toc-text">2.为什么需要生产者消费者模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-生产者-消费者模型（线程阻塞，线程唤醒）"><span class="toc-number">3.</span> <span class="toc-text">3.生产者-消费者模型（线程阻塞，线程唤醒）</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
