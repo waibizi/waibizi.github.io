@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Archive: 2020/6</title>
+    <title>Tag: -IO模型 - 歪鼻子</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
@@ -33,68 +33,101 @@
 <body class="loading">
     <span id="config-title" style="display:none">歪鼻子</span>
     <div id="loader"></div>
-    <div id="single" class="page">
-    <div id="top">
-        <a class="iconfont icon-left image-icon" href="javascript:history.back()"></a>
-    </div>
-    <div class="section">
-        <div class="article">
-            <div class="main">
-                <div class="content">
-                    <div class="timeline">
-                      <h2 class="timeline-title">归档: 7篇</h2><hr>
-                      
-                      
-                        
-                          <h3 class="timeline-subtitle">2020</h3>
-                        
-                        <div class="timeline-item">
-                          <time>2020-07-12</time>
-                          <a target="_self" href="/2020/07/12/%E3%80%90Java%E7%9A%84IO%E6%A8%A1%E5%9E%8B%E3%80%91BIO%E3%80%81NIO%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">【Java的IO模型】BIO、NIO基础入门</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2020-06-24</time>
-                          <a target="_self" href="/2020/06/24/synchronized%E9%94%81%E5%8D%87%E7%BA%A7%E5%88%86%E6%9E%90/">synchronized锁升级分析</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2020-06-15</time>
-                          <a target="_self" href="/2020/06/15/%E3%80%90%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80%E3%80%91Java%E5%BD%93%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E9%94%81%E6%A6%82%E5%BF%B5/">【并发基础】Java当中的几个锁概念</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2020-06-12</time>
-                          <a target="_self" href="/2020/06/12/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/">【线程通信】生产者消费者模型</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2020-06-11</time>
-                          <a target="_self" href="/2020/06/11/%E3%80%90Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%91%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">【Java设计模式】代理模式</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2020-06-09</time>
-                          <a target="_self" href="/2020/06/09/%E5%86%8D%E8%B0%88%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1-AutoBoxing-%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1-Unboxing/">再谈自动装箱(AutoBoxing)，自动拆箱(Unboxing)</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2020-06-09</time>
-                          <a target="_self" href="/2020/06/09/%E3%80%90CAS%E5%9F%BA%E7%A1%80%E3%80%91CAS%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/">【CAS基础】CAS简单入门</a>
-                        </div>
-                      
-                    </div>
-                </div>
-            </div>
+    <div class="nav">
+    <ul id="menu-menu" class="menu">
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="//" title="首页" target="_blank" rel="noopener">首页</a>
+        </li>
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/categories/" title="分类" target="_blank" rel="noopener">分类</a>
+        </li>
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/tags/" title="标签" target="_blank" rel="noopener">标签</a>
+        </li>
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="//" title="归档" target="_blank" rel="noopener">归档</a>
+        </li>
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="//" title="关于" target="_blank" rel="noopener">关于</a>
+        </li>
+        
+    </ul>
+	<span class="target"></span>
+	<center>
+	<div class="hitokoto">
+		<span class="typed" id="hitokoto" data-st="true"></span>
+	</div>
+	</center>
+	
+	<p class="footerlinks">
+		<a href="#" class="iconfont icon-null"></a>
+		
+            <a href="/" title="facebook" class="iconfont icon-facebook" target="_blank" rel="noopener"> </a>
+        
+            <a href="/" title="twitter" class="iconfont icon-twitter" target="_blank" rel="noopener"> </a>
+        
+            <a href="/" title="github" class="iconfont icon-github" target="_blank" rel="noopener"> </a>
+        
+            <a href="/img/logo.png" title="wechat" class="iconfont icon-wechat" target="_blank" rel="noopener"> </a>
+        
+            <a href="/1253658747@qq.com" title="email" class="iconfont icon-email" target="_blank" rel="noopener"> </a>
+        
+		<a href="#" class="iconfont icon-null"></a>
+	</p>
+	
+    <p id="copyright">
+        &copy; 2020 John Doe.
+        <span> | </span>Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+        <span> | </span>Theme <a href="https://github.com/Fechin/hexo-theme-diaspora" title="Diaspora" target="_blank" rel="noopener">Diaspora</a> by Fechin
+		
+		<span> | </span><a rel="nofollow" href="http://www.waibizi.com" target="_blank">粤ICP备20016689号</a>
+		
+    </p>
+</div>
+
+<div id="container">
+    
+<div id="screen">
+    <div id="mark">
+        <div class="layer" data-depth="0.4">
+            <img src="/img/welcome-cover.jpg" id="cover" crossorigin="anonymous" width="1920" height="1080">
         </div>
     </div>
+    <div id="vibrant">
+        <svg viewBox="0 0 2880 1620" height="100%" preserveAspectRatio="xMaxYMax slice">
+            <polygon opacity="0.7" points="2000,1620 0,1620 0,0 600,0 "/>
+        </svg>
+        <div></div>
+    </div>
+    <div id="header">
+        <div>
+            <a class="image-logo" href="/"></a>
+			
+            <div class="iconfont icon-menu switchmenu"></div>
+        </div>
+    </div>
+    
+    <div id="post0">
+        <p>七月 12, 2020</p>
+        <h2><a href="/2020/07/12/%E3%80%90Java%E7%9A%84IO%E6%A8%A1%E5%9E%8B%E3%80%91BIO%E3%80%81NIO%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" title="【Java的IO模型】BIO、NIO基础入门" class="posttitle">【Java的IO模型】BIO、NIO基础入门</a></h2>
+        <p class="summary">一、IO模型作为一个Java开发者，对于IO模型是绕不开的一环：所谓的IO模型，就是你采用什么的通道模型进行数据的...</p>
+    </div>
+    
 </div>
+
+    <div id="primary">
+        
+    </div>
+    
+</div>
+<div id="preview"></div>
+
+
 
 </body>
 
