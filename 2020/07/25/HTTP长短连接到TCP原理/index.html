@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HTTP长短连接到TCP原理 - 歪鼻子</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="waibizi,"> 
+    <meta name="description" content="1.长短连接介绍HTTP短连接：客户端和服务端交互的时候每进行一次HTTP操作就建立一次连接。举例就是浏览器访问服务器去请求Web资源的时候，每请求一个Web资源，就需要建立一次连接，这个就是短连接,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="歪鼻子" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">歪鼻子</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://waibizi.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">HTTP长短连接到TCP原理</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">HTTP长短连接到TCP原理</h1>
+        <div class="stuff">
+            <span>七月 25, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="1-长短连接介绍"><a href="#1-长短连接介绍" class="headerlink" title="1.长短连接介绍"></a>1.长短连接介绍</h2><p>HTTP短连接：客户端和服务端交互的时候每进行一次HTTP操作就建立一次连接。举例就是浏览器访问服务器去请求Web资源的时候，每请求一个Web资源，就需要建立一次连接，这个就是短连接;（HTTP/1.0默认就是短连接）</p>
+<center>例如访问www.baidu.com这里每一个资源，如果是短连接的情况下，每一次进行HTTP操作都要重新建立一次HTTP连接</center><br>
+
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8YR0eARSFzAAIsogUix64021.png"></div>
+
+
+
+<p>HTTP长连接：客户端和服务端交互的时候不会进行一次HTTP操作就建立一次连接。请求头标志就是<font color="#FF33FF">Connection: keep-alive</font>，拿上面的例子来说就是全部都是来自一次连接拿到的数据，而HTTP操作却执行了n次;</p>
+<p>无论HTTP长连接还是短连接，本质上都是TCP连接，HTTP就是一个协议约定，HTTP是存在应用层的一个协议，而TCP是存在传输层的;</p>
+<h2 id="2-TCP协议简单介绍"><a href="#2-TCP协议简单介绍" class="headerlink" title="2.TCP协议简单介绍"></a>2.TCP协议简单介绍</h2><p>TCP是一种面向连接的单播协议，在发送数据前，通信双方必须在彼此间建立一条连接。所谓的“连接”，其实是客户端和服务器的内存里保存的一份关于对方的信息，如ip地址、端口号等。（我们也称TCP是虚连接）</p>
+<p>TCP可以看成是一种字节流，它会处理IP层或以下的层的丢包、重复以及错误问题。在连接的建立过程中，双方需要交换一些连接的参数。这些参数可以放在TCP头部。</p>
+<p>TCP也可以提供全双工的通信。（BIO与NIO就是），全双工通信有一个特点，就是有发送缓存与接收缓存</p>
+<p>TCP提供了一种可靠、面向连接、字节流、传输层的服务，采用三次握手建立一个连接。采用4次挥手来关闭一个连接。</p>
+<p>也就是说每一次建立连接的时候都是要经过三次握手才可以成功建立连接，而释放连接的时候需要四次挥手才可以释放连接;（意味着每一次连接都是要消耗性能跟时间的）</p>
+<h2 id="3-TCP头部"><a href="#3-TCP头部" class="headerlink" title="3.TCP头部"></a>3.TCP头部</h2><center>由于三次握手与四次挥手涉及到TCP头部，所以我们先分析分析TCP的头部，结构图如下;</center><br>
+
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8YUueAZoGXAAJCyBT2u-o309.png" height="70%" width="70%"></div>
+
+
+
+<p>TCP的头部是20个字节的固定首部，一行有四个字节，五行是固定的，四五二十字节;最后一行是可选的，填充是因为TCP有强迫症，如果选项的长度没达到四个字节，那么填充就会自动填充上去，一般都是填充0;</p>
+<p><font color="#FF33FF">序号：</font>在一个TCP连接当中，传送的字节流中的每一个字节都是按照顺序进行编号的;</p>
+<p><font color="#FF33FF">确认号：</font>期望收到对方下一个报文段的第一个数据字节的序号。若确认号为N，就代表序号N-1为止的所有数据都已经正确收到了;</p>
+<p><font color="#FF33FF">数据偏移：</font>这个数据偏移主要是为了收到TCP之后，我需要将这个数据偏移多少，才能得到真正的数据。也就是TCP报文段的数据起始处距离TCP报文段的起始处有多远，以4字节为一个单位，即1一个数值是4字节;（因为不是每一次TCP请求都是20字节固定的头部长度）</p>
+<h3 id="重点：六大控制位"><a href="#重点：六大控制位" class="headerlink" title="重点：六大控制位"></a><font color=" #FF8C00">重点：六大控制位</font></h3><p><strong><font color="#00FA9A">紧急位URG：</font></strong>URG=1的时候，标明此报文段当中有紧急数据，是高优先级的数据，应该尽快传送，不用在缓存当中排队，要配合紧急指针字段使用;</p>
+<p><strong><font color="#00FA9A">确认位ACK：</font></strong>ACK=1时确认号才是有效的，在连接建立之后所有传送的报文段都必须把ACK设置为1;</p>
+<p><strong><font color="#00FA9A">推送为PSH：</font></strong>PSH=1时，接收发应该尽快交付给接收的应用程序，不再等到缓存填满了再向上交付;</p>
+<p><strong><font color="#00FA9A">复位RST：</font></strong>RST=1时，表明TCP连接中出现了严重的差错，必须释放连接，然后重新建立传输连接;</p>
+<p><strong><font color="#00FA9A">同步位SYN：</font></strong>SYN=1时，表明是一个连接请求/连接接受报文;</p>
+<p><strong><font color="#00FA9A">终止位FIN：</font></strong>FIN=1时，表明此报文发送方数据已经发完了，要求释放连接;</p>
+<p><font color="#FF33FF">窗口：</font>指的是发送本报文段的一方的接收窗口，即现在允许对方发送的数据量;</p>
+<p><font color="#FF33FF">校验和：</font>检验首部+数据，检验是要加上12字节的伪首部，第四个字段为6，表明是TCP连接;</p>
+<p><font color="#FF33FF">紧急指针：</font>URG=1时才有意义，指出本报文段中紧急数据的字节数;</p>
+<p><font color="#FF33FF">选项：</font>最大报文段长度MSS、窗口扩大、时间戳、选择确认等等····（这个可扩展）</p>
+<h2 id="4-TCP连接管理"><a href="#4-TCP连接管理" class="headerlink" title="4.TCP连接管理"></a>4.TCP连接管理</h2><h3 id="TCP连接传输三部曲（三次握手）"><a href="#TCP连接传输三部曲（三次握手）" class="headerlink" title="TCP连接传输三部曲（三次握手）"></a>TCP连接传输三部曲（三次握手）</h3><div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8YabeAbeUtAABMW5bo56o557.png" height="50%" width="50%"></div>
+
+<p>TCP连接的简历是采用<font color="#FF33FF">客户端服务端方式</font>，主动发起连接得到的应用称之为客户端，而被动等待连接建立的应用称之为服务器;</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8YfYyAB7U9AACzrJpGn2g501.png" height="30%" width="30%"></div>
+
+
+
+<center>上图歪鼻子与歪鼻子的朋友的这种对话方式其实就是TCP的连接建立过程</center>
+
+<center>接下来解释三次握手！！！控制位要登场咯~</center>
+
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8YeQSARL0QAADhKO07Ph0976.png" height="70%" width="70%"></div>
+
+<br>
+
+
+<center>上图就是三次握手的过程，seq是一个序列号</center>
+
+<p><font color=" #FF8C00">第一次握手：</font>客户端发送连接请求报文段，没有携带应用层数据;</p>
+<center>SYN=1，seq=X(随机数)</center><br>
+
+<p><font color=" #FF8C00">第二次握手：</font>服务器为该TCP连接分配缓存和变量，并向客户端返回确认报文段，允许连接，没有携带应用层数据;</p>
+<center>SYN=1 ACK=1 seq=Y (随机数) ack=X+1 </center><br>
+
+<p><font color=" #FF8C00">第三次握手：</font>客户端为该TCP连接分配缓存和变量，并向故武器返回确认的确认，可以携带数据;</p>
+<center>ACK=1 seq=X+1 ack=Y+1</center><br>
+
+
+
+<p><font color=" #FF8C00">SYN洪泛攻击：</font>SYN洪泛攻击是发送在OSI第四层，也就是传输层，这种攻击是利用TCP协议的特性，即三次握手过程。攻击者发送TCP SYN，SYN是TCP三次握手当中的第一个数据报，而当服务器返回ACK后，该攻击者就不对其进行确认，那么这个TCP连接会处于挂起的状态，也就是半连接的状态，服务器如果收不到再确认的话，还会重复发送ACK给攻击者，这样会大大浪费服务器的资源。攻击者如果对服务器发送大量的这种TCP连接的话，由于每一个连接都没法完成三次握手，所以在服务器上，这些TCP连接会因为挂起而消耗CPU和内存，最后服务器可能会四级，就无法为正常用户提供服务了;</p>
+<h3 id="TCP连接释放（四次挥手）"><a href="#TCP连接释放（四次挥手）" class="headerlink" title="TCP连接释放（四次挥手）"></a>TCP连接释放（四次挥手）</h3><center>TCP在如果需要安全得释放连接，需要经过类似下图的过程</center><br>
+
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8YfbSALWOZAADM9xNDzjY251.png" height="50%" width="50%"></div>
+
+<br>
+
+<p>参与一条TCP连接的两个进程当中的任何一个都可以主动终止该连接，连接结束之后，主机当中为本次连接创建的缓存与变量将会被释放;</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8Yf4mALPHvAACb3ilmoIo442.png" height="50%" width="50%"></div>
+
+
+
+<p><font color="#FF33FF">第一次挥手：</font>客户端发送连接释放报文段，停止发送数据，主动关闭TCP连接</p>
+<center>FIN=1 seq=u</center><br>
+
+<p><font color="#FF33FF">第二次挥手：</font>服务端会送一个确认报文段，客户端到服务器这个方向的连接就已经释放了（TCP连接处于半关闭的状态）</p>
+<center>ACK=1 seq=v ack=u+1</center><br>
+
+<p><font color="#FF33FF">第三次挥手：</font>服务端发完数据，就会发出连接释放报文段，主动关闭TCP连接</p>
+<center>FIN=1 ACK=1  seq=w ack=u+1</center><br>
+
+<p><font color="#FF33FF">第四次挥手：</font>客户端会送一个确认报文段，再等待计时器设置的2MSL(最长报文段寿命)的时候后，连接就彻底关闭了;</p>
+<center>ACK=1 seq=u+1 ack=w+1</center><br>
+
+<h3 id="为什么建立连接是三次握手，而关闭连接却是四次挥手呢？"><a href="#为什么建立连接是三次握手，而关闭连接却是四次挥手呢？" class="headerlink" title="为什么建立连接是三次握手，而关闭连接却是四次挥手呢？"></a>为什么建立连接是三次握手，而关闭连接却是四次挥手呢？</h3><p>这是因为服务端在LISTEN状态下，收到建立连接请求的SYN报文后，把ACK和SYN放在一个报文里发送给客户端。而关闭连接时，当收到对方的FIN报文时，仅仅表示对方不再发送数据了但是还能接收数据，己方是否现在关闭发送数据通道，需要上层应用来决定，因此，己方ACK和FIN一般都会分开发送。</p>
+<h2 id="5-长连接与短连接的优缺点"><a href="#5-长连接与短连接的优缺点" class="headerlink" title="5.长连接与短连接的优缺点"></a>5.长连接与短连接的优缺点</h2><h3 id="长连接："><a href="#长连接：" class="headerlink" title="长连接："></a>长连接：</h3><p>从网页的请求角度以及到TCP的三次握手再到四次挥手，我们都可以明显感觉到长连接带来的好处，对于需要频繁请求的客户端来说，是最适合使用长连接的场景;但是，在长连接的情况下，Client一般不会主动关闭连接，这样就会导致随着Client的数量越来越多，Server端就会保持太多的连接，也会降低性能;一般我们是通过优化Server端的连接策略，如可以关闭一些长时间没有请求的客户端，这样可以避免一些恶意的连接请求，导致服务端出现连接数不够的情况。如果条件允许的话，可以限制每个客户端允许的最大连接数来达到优化的目的;</p>
+<h3 id="短连接"><a href="#短连接" class="headerlink" title="短连接"></a>短连接</h3><p><strong>短连接</strong>对于服务器来说管理较为简单，存在的连接都是有用的连接，不需要额外的控制手段。但如果客户<strong>请求频繁</strong>，将在<strong>TCP的建立和关闭操作上浪费时间和带宽</strong>。</p>
+<h2 id><a href="#" class="headerlink" title></a></h2><h2 id="彩蛋时间：涉及面试题及答案"><a href="#彩蛋时间：涉及面试题及答案" class="headerlink" title="彩蛋时间：涉及面试题及答案"></a>彩蛋时间：涉及面试题及答案</h2><h3 id="（一）为什么连接的时候是三次握手，关闭的时候却是四次握手？"><a href="#（一）为什么连接的时候是三次握手，关闭的时候却是四次握手？" class="headerlink" title="（一）为什么连接的时候是三次握手，关闭的时候却是四次握手？"></a>（一）为什么连接的时候是三次握手，关闭的时候却是四次握手？</h3><p>因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文。其中ACK报文是用来应答的，SYN报文是用来同步的。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，”你发的FIN报文我收到了”。只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送。故需要四步握手。</p>
+<h3 id="（二）为什么TIME-WAIT状态需要经过2MSL-最大报文段生存时间-才能返回到CLOSE状态？"><a href="#（二）为什么TIME-WAIT状态需要经过2MSL-最大报文段生存时间-才能返回到CLOSE状态？" class="headerlink" title="（二）为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？"></a>（二）为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？</h3><p>虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK。Client会在发送出ACK之后进入到TIME_WAIT状态。Client会设置一个计时器，等待2MSL的时间。如果在该时间内再次收到FIN，那么Client会重发ACK并再次等待2MSL。所谓的2MSL是两倍的MSL(Maximum Segment Lifetime)。MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接。</p>
+<h3 id="（三）为什么不能用两次握手进行连接？"><a href="#（三）为什么不能用两次握手进行连接？" class="headerlink" title="（三）为什么不能用两次握手进行连接？"></a>（三）为什么不能用两次握手进行连接？</h3><p>3次握手完成两个重要的功能，既要双方做好发送数据的准备工作(双方都知道彼此已准备好)，也要允许双方就初始序列号进行协商，这个序列号在握手过程中被发送和确认。</p>
+<p>​    现在把三次握手改成仅需要两次握手，死锁是可能发生的。作为例子，考虑计算机S和C之间的通信，假定C给S发送一个连接请求分组，S收到了这个分组，并发 送了确认应答分组。按照两次握手的协定，S认为连接已经成功地建立了，可以开始发送数据分组。可是，C在S的应答分组在传输中被丢失的情况下，将不知道S 是否已准备好，不知道S建立什么样的序列号，C甚至怀疑S是否收到自己的连接请求分组。在这种情况下，C认为连接还未建立成功，将忽略S发来的任何数据分 组，只等待连接确认应答分组。而S在发出的分组超时后，重复发送同样的分组。这样就形成了死锁。</p>
+<h3 id="（四）如果已经建立了连接，但是客户端突然出现故障了怎么办？"><a href="#（四）如果已经建立了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="（四）如果已经建立了连接，但是客户端突然出现故障了怎么办？"></a>（四）如果已经建立了连接，但是客户端突然出现故障了怎么办？</h3><p>TCP还设有一个保活计时器，显然，客户端如果出现故障，服务器不能一直等下去，白白浪费资源。服务器每收到一次客户端的请求后都会重新复位这个计时器，时间通常是设置为2小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔75秒钟发送一次。若一连发送10个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://m10.music.126.net/20200718132507/2accc18c98a561b7ffee6caa688f0fab/yyaac/010c/070e/0752/6f2a8bb6520de4301bab087cbce98087.m4ap3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o='歪鼻子'
+        data-a='waibizi'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-长短连接介绍"><span class="toc-number">1.</span> <span class="toc-text">1.长短连接介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TCP协议简单介绍"><span class="toc-number">2.</span> <span class="toc-text">2.TCP协议简单介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-TCP头部"><span class="toc-number">3.</span> <span class="toc-text">3.TCP头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#重点：六大控制位"><span class="toc-number">3.1.</span> <span class="toc-text">重点：六大控制位</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-TCP连接管理"><span class="toc-number">4.</span> <span class="toc-text">4.TCP连接管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP连接传输三部曲（三次握手）"><span class="toc-number">4.1.</span> <span class="toc-text">TCP连接传输三部曲（三次握手）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP连接释放（四次挥手）"><span class="toc-number">4.2.</span> <span class="toc-text">TCP连接释放（四次挥手）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么建立连接是三次握手，而关闭连接却是四次挥手呢？"><span class="toc-number">4.3.</span> <span class="toc-text">为什么建立连接是三次握手，而关闭连接却是四次挥手呢？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-长连接与短连接的优缺点"><span class="toc-number">5.</span> <span class="toc-text">5.长连接与短连接的优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#长连接："><span class="toc-number">5.1.</span> <span class="toc-text">长连接：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#短连接"><span class="toc-number">5.2.</span> <span class="toc-text">短连接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number">6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#彩蛋时间：涉及面试题及答案"><span class="toc-number">7.</span> <span class="toc-text">彩蛋时间：涉及面试题及答案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（一）为什么连接的时候是三次握手，关闭的时候却是四次握手？"><span class="toc-number">7.1.</span> <span class="toc-text">（一）为什么连接的时候是三次握手，关闭的时候却是四次握手？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（二）为什么TIME-WAIT状态需要经过2MSL-最大报文段生存时间-才能返回到CLOSE状态？"><span class="toc-number">7.2.</span> <span class="toc-text">（二）为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（三）为什么不能用两次握手进行连接？"><span class="toc-number">7.3.</span> <span class="toc-text">（三）为什么不能用两次握手进行连接？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（四）如果已经建立了连接，但是客户端突然出现故障了怎么办？"><span class="toc-number">7.4.</span> <span class="toc-text">（四）如果已经建立了连接，但是客户端突然出现故障了怎么办？</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
