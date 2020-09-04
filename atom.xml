@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://waibizi.github.io/"/>
-  <updated>2020-07-25T04:53:36.771Z</updated>
+  <updated>2020-09-04T05:40:21.144Z</updated>
   <id>https://waibizi.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>什么是微服务？0202年了，你还不知道微服务？</title>
+    <link href="https://waibizi.github.io/2020/09/04/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BE%AE%E6%9C%8D%E5%8A%A1%EF%BC%9F0202%E5%B9%B4%E4%BA%86%EF%BC%8C%E4%BD%A0%E8%BF%98%E4%B8%8D%E7%9F%A5%E9%81%93%E5%BE%AE%E6%9C%8D%E5%8A%A1%EF%BC%9F/"/>
+    <id>https://waibizi.github.io/2020/09/04/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BE%AE%E6%9C%8D%E5%8A%A1%EF%BC%9F0202%E5%B9%B4%E4%BA%86%EF%BC%8C%E4%BD%A0%E8%BF%98%E4%B8%8D%E7%9F%A5%E9%81%93%E5%BE%AE%E6%9C%8D%E5%8A%A1%EF%BC%9F/</id>
+    <published>2020-09-04T05:40:05.000Z</published>
+    <updated>2020-09-04T05:40:21.144Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="什么是微服务？0202年了，你还不知道微服务？"><a href="#什么是微服务？0202年了，你还不知道微服务？" class="headerlink" title="什么是微服务？0202年了，你还不知道微服务？"></a>什么是微服务？0202年了，你还不知道微服务？</h1><h2 id="1-微服务概念"><a href="#1-微服务概念" class="headerlink" title="1.微服务概念"></a>1.微服务概念</h2><p>想知道什么是微服务，首先我们得先认识什么是单体架构，如果你的日常开发当中没有接触微服务，那么你接触的架构风</p><p>格都是单体架构，那么，究竟是什么单体呢？在以往的开发当中我们都是把一个系统全部“塞”到一个Web容器当中，也就</p><p>是一个系统所有的业务都是存放到一起的，我们把这种架构风格称之为单体架构。</p><p>微服务就是将我们平时单体架构的业务，以服务为粒度将原先单体的业务进行拆分，服务之间互相协调、互相配合，为用</p><p>户提供最终价值。每个服务运行在其独立的进程中，服务与服务采用轻量级的通信机制互相沟通（一般都是基于HTTP协</p><p>议的RESTful API）。每个服务都围绕具体业务进行构建，并且能够被独立部署到生成环境，类生成环境等。</p><h2 id="2-为什么要用微服务"><a href="#2-为什么要用微服务" class="headerlink" title="2.为什么要用微服务"></a>2.为什么要用微服务</h2><p>这个疑问可能是大部分都会思考的，原先单体不是好好的吗？为什么要使用微服务？就像前面所说的，如果采用微服务的</p><p>话，我们还得考虑服务之间的调用问题等等····</p><p>那我们就来比较单体架构与微服务架构的特点吧</p><div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl9N10qAAgKxAAJO-Yqh5Wg531.jpg" height="90%" width="90%"></div><h2 id="3-怎么设计微服务"><a href="#3-怎么设计微服务" class="headerlink" title="3.怎么设计微服务"></a>3.怎么设计微服务</h2><p>任何一种架构都有自己的设计风格，微服务也不例外，微服务的架构风格主要有以下四点</p><div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl9N2sGALDJpAAIlBVZilJo547.jpg" height="50%" width="50%"></div><h3 id="一、AKF扩展划分"><a href="#一、AKF扩展划分" class="headerlink" title="一、AKF扩展划分"></a>一、AKF扩展划分</h3><div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl9N3A2AJeYHAACiK0KcUbg925.jpg" height="50%" width="50%"></div><p>AKF扩展立方体(参考《The Art of Scalability》)，是一个叫AKF的公司的技术专家抽象总结的应用扩展的三个维度。理论上按照这三个扩展模式，可以将一个单体系统，进行无限扩展。</p><p>场景说明：比如打车应用，一个集群撑不住时，分了多个集群，后来用户激增还是不够用，经过分析发现是乘客和车主访问量很大，就将打车应用拆成了三个乘客服务、车主服务、支付服务。三个服务的业务特点各不相同，独立维护，各自都可以再次按需扩展。</p><h3 id="二、前后端分离"><a href="#二、前后端分离" class="headerlink" title="二、前后端分离"></a>二、前后端分离</h3><p><strong>前后端分离原则，简单来讲就是前端和后端的代码分离也就是技术上做分离，我们推荐的模式是最好直接采用物理分离的方式部署，进一步促使进行更彻底的分离。不要继续以前的服务端模板技术，比如JSP ，把Java JS HTML CSS 都堆到一个页面里，稍复杂的页面就无法维护。</strong></p><p>这种分离模式的方式有几个好处：</p><p>1）.前后端技术分离，可以由各自的专家来对各自的领域进行优化，这样前端的用户体验优化效果会更好。</p><p>2）.分离模式下，前后端交互界面更加清晰，就剩下了接口和模型，后端的接口简洁明了，更容易维护。</p><p>3）.前端多渠道集成场景更容易实现，后端服务无需变更，采用统一的数据和模型，可以支撑前端的web UI\ 移动App等访问。</p><h3 id="三、无状态服务"><a href="#三、无状态服务" class="headerlink" title="三、无状态服务"></a>三、<strong>无状态服务</strong></h3><div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl9N3ZOAR8AaAADd4BlIJb4271.jpg" height="50%" width="50%"></div><p>对于无状态服务，首先说一下什么是状态：如果一个数据需要被多个服务共享，才能完成一笔交易，那么这个数据被称为状态。进而依赖这个“状态”数据的服务被称为有状态服务，反之称为无状态服务。</p><p>那么这个无状态服务原则并不是说在微服务架构里就不允许存在状态，表达的真实意思是要把有状态的业务服务改变为无状态的计算类服务，那么状态数据也就相应的迁移到对应的“有状态数据服务”中。</p><p>场景说明：例如我们以前在本地内存中建立的数据缓存、Session缓存，到现在的微服务架构中就应该把这些数据迁移到分布式缓存中存储，让业务服务变成一个无状态的计算节点。迁移后，就可以做到按需动态伸缩，微服务应用在运行时动态增删节点，就不再需要考虑缓存数据如何同步的问题。</p><h3 id="四、Restful通信风格"><a href="#四、Restful通信风格" class="headerlink" title="四、Restful通信风格"></a><strong>四、Restful通信风格</strong></h3><p><strong>REST的全称就是表述层状态转移（表述层状态转移），这是一套在互联网体系中，调用者与被调用者进行互动的规约设计，REST其实并不是什么新鲜事物了，早在2000年的时候Roy Thomas Fielding博士就在论文中提及了，Roy Thomas  Fielding博士是HTTP1.0与HTTP1.1协议的主要设计者，可以说REST是在HTTP交互当中的最佳规约了。</strong></p><p><strong>1.无状态协议HTTP，具备先天优势，扩展能力很强。例如需要安全加密是，有现成的成熟方案HTTPS可用。</strong></p><p><strong>2.JSON 报文序列化，轻量简单，人与机器均可读，学习成本低，搜索引擎友好。</strong></p><p><strong>3.语言无关，各大热门语言都提供成熟的Restful API框架，相对其他的一些RPC框架生态更完善。</strong></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;什么是微服务？0202年了，你还不知道微服务？&quot;&gt;&lt;a href=&quot;#什么是微服务？0202年了，你还不知道微服务？&quot; class=&quot;headerlink&quot; title=&quot;什么是微服务？0202年了，你还不知道微服务？&quot;&gt;&lt;/a&gt;什么是微服务？0202年了，你还不
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>HTTP长短连接到TCP原理</title>
