@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）前言最近在开发自己的博客系统，前端采用vue+nuxt，后端采用SpringBoot作为整体架构，所以用到一些实战的技巧就打算顺便写写文章。 1.了解RESTful做为一个网络应用开发人，都晓得我们一个软件分为前端与后端，在前后端的交互当中，我们需要制定一个“规约”，这个规约就是我们说的REST；   REST的全称就是表述">
+<meta property="og:type" content="article">
+<meta property="og:title" content="什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）">
+<meta property="og:url" content="https://waibizi.github.io/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）前言最近在开发自己的博客系统，前端采用vue+nuxt，后端采用SpringBoot作为整体架构，所以用到一些实战的技巧就打算顺便写写文章。 1.了解RESTful做为一个网络应用开发人，都晓得我们一个软件分为前端与后端，在前后端的交互当中，我们需要制定一个“规约”，这个规约就是我们说的REST；   REST的全称就是表述">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dIHqACZ_MAABkuFVORwk219.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dJ0OAZffwAAAYcUMiWcU944.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dLhOAAZg2AAC-8MQHIhU177.png">
+<meta property="article:published_time" content="2021-01-16T13:35:09.828Z">
+<meta property="article:modified_time" content="2021-01-16T13:52:06.156Z">
+<meta property="article:author" content="歪鼻子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dIHqACZ_MAABkuFVORwk219.png">
+
+<link rel="canonical" href="https://waibizi.github.io/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger） | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:52:06" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）"><a href="#什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）" class="headerlink" title="什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）"></a>什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在开发自己的博客系统，前端采用vue+nuxt，后端采用SpringBoot作为整体架构，所以用到一些实战的技巧就打算顺便写写文章。</p>
+<h2 id="1-了解RESTful"><a href="#1-了解RESTful" class="headerlink" title="1.了解RESTful"></a>1.了解RESTful</h2><p>做为一个网络应用开发人，都晓得我们一个软件分为前端与后端，在前后端的交互当中，我们需要制定一个“规约”，这个规约就是我们说的REST；</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dIHqACZ_MAABkuFVORwk219.png" height="50%" width="50%"></div>
+
+<p>REST的全称就是表述层状态转移（表述层状态转移），这是一套在互联网体系中，调用者与被调用者进行互动的规约设计，REST其实并不是什么新鲜事物了，早在2000年的时候Roy Thomas Fielding博士就在论文中提及了，Roy Thomas Fielding博士是HTTP1.0与HTTP1.1协议的主要设计者，可以说REST是在HTTP交互当中的最佳规约了。</p>
+<p>由于自4G以来的互联网的爆炸性发展，网络应用的爆炸性增长，所以REST规约逐渐被重视了起来，那么说了那么多废话，我们还是来看看这个规约吧。</p>
+ <a id="more"></a>
+
+<h2 id="2-RESTful规范"><a href="#2-RESTful规范" class="headerlink" title="2.RESTful规范"></a>2.RESTful规范</h2><p>REST并不是什么新鲜的技术，而是在HTTP在的一种规范，首先HTTP的操作主要有<font color=" #FF8C00">GET</font>、<font color=" #FF8C00">POST</font>、<font color=" #FF8C00">DELETE、</font><font color=" #FF8C00">PUT</font>;</p>
+<p>我们对于后端的操作最最最最常见的，也就是这四个，<font color="#FF33FF">GET</font>是获取数据的操作，<font color="#FF33FF">POST</font>是提交数据的，<font color="#FF33FF">DELETE</font>是删除资源的，<font color="#FF33FF">PUT</font>是对于资源的更新操作；</p>
+<p>我们回想一下：前端与后端的交互当中，不就是通过URL与参数的交互与响应，URL含义是“<strong>统一资源定位符</strong>”，全称是Uniform Resource Locator，我们重新读一遍这几个字<font color="#FF33FF">“<strong>统一资源定位符</strong>”</font>，也就是对于URL来说，只需要关心这个链接是一个资源，而操作应该是停留在HTTP的操作当中：</p>
+<p><font color=" #FF8C00">GET : URL</font>   获取这个资源</p>
+<p><font color=" #FF8C00">DELETE : URL</font> 删除这个资源</p>
+<p><font color=" #FF8C00">POST : URL</font> 对这个资源进行数据的提交</p>
+<p><font color=" #FF8C00">PUT : URL</font> 更新资源</p>
+<p>如上的语义就可以很清晰地表达你所要表达的意思了，而不应该在你的URL当中添加对于操作的动词，我见过太多太多的例子是直接getPeople（当然我之前也是这么干的）。对于同一个资源的操作，换了N多的URL。</p>
+<p>下面简单举几个简单的示范案例</p>
+<p>GET <a href="https://www.waibizi.com/apple/list" target="_blank" rel="noopener">https://www.waibizi.com/apple/list</a>    获取苹果列表</p>
+<p>GET <a href="https://www.waibizi.com/apple/1" target="_blank" rel="noopener">https://www.waibizi.com/apple/1</a>    获取编号是1的苹果</p>
+<p>PUT <a href="https://www.waibizi.com/apple/1" target="_blank" rel="noopener">https://www.waibizi.com/apple/1</a>    对于编号是1的苹果进行数据的更新</p>
+<p>POST <a href="https://www.waibizi.com/apple" target="_blank" rel="noopener">https://www.waibizi.com/apple</a>    新增一个苹果</p>
+<p>POST <a href="https://www.waibizi.com/apple/list" target="_blank" rel="noopener">https://www.waibizi.com/apple/list</a>   新增几个苹果（当然你的数据应该放在body当中）</p>
+<p>DELETE <a href="https://www.waibizi.com/apple/list" target="_blank" rel="noopener">https://www.waibizi.com/apple/list</a>    删除几个苹果</p>
+<p>………</p>
+<p>这个REST规约并不是那么苛刻的，但是切记不要将动词放到URL当中，要对于路径参数尽可能地运用，并且你的URL声明不应该是又长又无语义化的，REST本意就是为了语义化、增强可读性，而如果你强制为了遵守REST规约，导致可读性变差也是不可取的一种行为。</p>
+<h3 id="URI规范参考"><a href="#URI规范参考" class="headerlink" title="URI规范参考"></a>URI规范参考</h3><ul>
+<li>使用域及子域对资源进行合理的分组或划分</li>
+<li>在URI的路径部分使用斜杠分隔符（ / ）来表示资源之间的层次关系</li>
+<li>在URI的路径部分使用逗号（  ，）和分号（ ； ）来表示非层次元素</li>
+<li>使用连字符（ - ）和下划线（ _ ）来改善长路劲中的名称可读性（URI一般不使用驼峰命名）</li>
+<li>在URI的查询部分使用 “ 与 ” 符号（ &amp; ）来分隔参数</li>
+<li>在URI中避免出现文件扩展名（例如.php，.aspx和.jsp）</li>
+</ul>
+<h2 id="3-统一返回值封装"><a href="#3-统一返回值封装" class="headerlink" title="3.统一返回值封装"></a>3.统一返回值封装</h2><p>对于同一个后端请求，返回数据格式应该是统一的，而不是混乱的。下面是简单的示例，msg是对于操作的提示信息，code是HTTP的状态码，尽量遵守HTTP的状态码，而不是自己去定义一些规范，最后，data才是你实际需要的数据。</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dJ0OAZffwAAAYcUMiWcU944.png" height="50%" width="50%"></div>
+
+<h2 id="4-Swagger介绍"><a href="#4-Swagger介绍" class="headerlink" title="4.Swagger介绍"></a>4.Swagger介绍</h2><p><font color=" #FF8C00">Swagger</font> 是一个RESTful API 工具，我们在做开发的时候，经常会因为接口文档的规范性文档，前后端需要讨论磨合文档规范才可以开发，使用Swagger可以帮助我们统一一个规范要求。在使用Spring或者SpringBoot的时候，运用这个工具，可以很快地生成交互式的接口文档，Swagger由于读音与丝袜哥相似，所以通常也会以丝袜哥称这套工具，Swagger是目前世界上最流行的API表达工具了，尽管目前有新的工具，封装了Swagger更改了UI，但是现在主流还是Swagger。</p>
+<h2 id="5-上手Swagger"><a href="#5-上手Swagger" class="headerlink" title="5.上手Swagger"></a>5.上手Swagger</h2><h3 id="导入Swagger的依赖包"><a href="#导入Swagger的依赖包" class="headerlink" title="导入Swagger的依赖包"></a>导入Swagger的依赖包</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- swagger文档相关依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建-SwaggerConfig-配置类"><a href="#创建-SwaggerConfig-配置类" class="headerlink" title="创建 SwaggerConfig 配置类"></a>创建 SwaggerConfig 配置类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">api</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                <span class="comment">/* 添加你需要被扫描为swagger的相关包路径（通常配置主路径就可以了） */</span></span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">"com.waibizi.blog.project"</span>))</span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                <span class="comment">/* 添加swagger的标题 */</span></span><br><span class="line">                .title(<span class="string">"个人博客"</span>)</span><br><span class="line">                <span class="comment">/* 添加swagger的描述信息 */</span></span><br><span class="line">                .description(<span class="string">"歪鼻子个人博客 API 接口文档"</span>)</span><br><span class="line">                .version(<span class="string">"1.0"</span>)</span><br><span class="line">                .termsOfServiceUrl(<span class="string">"https://www.waibizi.com"</span>)</span><br><span class="line">                .version(<span class="string">"1.0"</span>)</span><br><span class="line">                .contact(<span class="keyword">new</span> Contact(<span class="string">"歪鼻子"</span>, <span class="string">"https://www.waibizi.com"</span>, <span class="string">"1253658747@qq.com"</span>))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后直接访问</p>
+<p>项目Base路径+swagger-ui.html</p>
+<p>因为我的路径配置了一个上下文，所以我的访问路径是</p>
+<p>localhost:8888/blog/swagger-ui.html</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/05/rBpUXl8dLhOAAZg2AAC-8MQHIhU177.png" height="50%" width="50%"></div>
+
+<h3 id="为你接口加上中文注释"><a href="#为你接口加上中文注释" class="headerlink" title="为你接口加上中文注释"></a>为你接口加上中文注释</h3><p>在Controller类加注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api</span>(value = <span class="string">"文章列表以及分类"</span>)</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SummaryListController</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Api注解说明"><a href="#Api注解说明" class="headerlink" title="@Api注解说明"></a>@Api注解说明</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api</span>：用在请求的类上，表示对类的说明</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>控制类的说明</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>控制器的标签，设置了这个之后，value会被覆盖</td>
+</tr>
+<tr>
+<td>produces</td>
+<td>返回数据的Content type    例：”application/json, application/xml”，默认为空</td>
+</tr>
+<tr>
+<td>consumes</td>
+<td>接收数据的Content type    例：”application/json, application/xml”，默认为空</td>
+</tr>
+<tr>
+<td>protocols</td>
+<td>交互的协议    例：http， https， ws， wss</td>
+</tr>
+<tr>
+<td>authorizations</td>
+<td>获取授权列表（安全声明），如果未设置，则返回一个空的授权值</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>配置为 true 将在文档中隐藏</td>
+</tr>
+</tbody></table>
+<p>接口方法上注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>(</span><br><span class="line">           value = <span class="string">"获取分类"</span>,</span><br><span class="line">           notes = <span class="string">"获取所有的分类信息，不用携带参数"</span>,</span><br><span class="line">           produces = <span class="string">"application/json, application/xml"</span>,</span><br><span class="line">           consumes=<span class="string">"application/json, application/xml"</span>,</span><br><span class="line">           response = Category<span class="class">.<span class="keyword">class</span>,</span></span><br><span class="line"><span class="class">           <span class="title">responseContainer</span> </span>= <span class="string">"List"</span></span><br><span class="line">   )</span><br><span class="line">   <span class="meta">@ApiResponses</span>(&#123;</span><br><span class="line">           <span class="meta">@ApiResponse</span>(code = <span class="number">200</span> ,message = <span class="string">"响应正常"</span>),</span><br><span class="line">           <span class="meta">@ApiResponse</span>(code = <span class="number">404</span> ,message = <span class="string">"资源不存在"</span>),</span><br><span class="line">           <span class="meta">@ApiResponse</span>(code = <span class="number">500</span> ,message = <span class="string">"服务器内部错误"</span>)</span><br><span class="line">   &#125;)</span><br><span class="line">   <span class="meta">@GetMapping</span>(<span class="string">"/category/list"</span>)</span><br><span class="line">   <span class="function"><span class="keyword">public</span> BlogResult <span class="title">GetCategoryList</span><span class="params">()</span></span>&#123;</span><br><span class="line">       <span class="keyword">return</span> BlogResult.success(<span class="string">"查询成功"</span>,categoryService.categoryList());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="ApiOperation注解说明"><a href="#ApiOperation注解说明" class="headerlink" title="@ApiOperation注解说明"></a>@ApiOperation注解说明</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>：用在请求的方法上，说明方法的用途、作用</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>接口URL简要说明</td>
+</tr>
+<tr>
+<td>notes</td>
+<td>接口详细说明与备注</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>如果设置这个值、 value的 值会被覆盖</td>
+</tr>
+<tr>
+<td>response</td>
+<td>返回值的主体类</td>
+</tr>
+<tr>
+<td>responseContainer</td>
+<td>返回值的容器，只能是”List”, “Set” or “Map”</td>
+</tr>
+<tr>
+<td>responseReference</td>
+<td>定对响应类型的引用。将覆盖任何指定的response（）类</td>
+</tr>
+<tr>
+<td>httpMethod</td>
+<td>“GET”、 “HEAD”、 “POST”、 “PUT”、 “DELETE”、 “OPTIONS” and “PATCH”</td>
+</tr>
+<tr>
+<td>produces</td>
+<td>返回数据的Content type  例：”application/json, application/xml”，默认为空</td>
+</tr>
+<tr>
+<td>nickname</td>
+<td>第三方工具唯一标识，默认为空</td>
+</tr>
+<tr>
+<td>consumes</td>
+<td>接收数据的Content type，例：”application/json, application/xml”，默认为空</td>
+</tr>
+<tr>
+<td>protocols</td>
+<td>交互的协议     例：http， https， ws， wss</td>
+</tr>
+<tr>
+<td>authorizations</td>
+<td>获取授权列表（安全声明），如果未设置，则返回一个空的授权值</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>配置为 true 将在文档中隐藏</td>
+</tr>
+<tr>
+<td>responseHeaders</td>
+<td>响应头列表</td>
+</tr>
+<tr>
+<td>code</td>
+<td>响应的HTTP状态代码。默认 200</td>
+</tr>
+<tr>
+<td>extensions</td>
+<td>扩展属性列表数组</td>
+</tr>
+</tbody></table>
+<p>@ApiResponses注解说明</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiResponses</span>：用在请求的方法上，表示一组响应</span><br><span class="line"><span class="meta">@ApiResponse</span>：用在<span class="meta">@ApiResponses</span>中，一般用于表达一个错误的响应信息</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>code</td>
+<td>响应的状态码</td>
+</tr>
+<tr>
+<td>message</td>
+<td>对应状态码的提示信息</td>
+</tr>
+<tr>
+<td>response</td>
+<td>抛出异常的类</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span>(<span class="string">"/article/summary/list/&#123;categoryId&#125;"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> BlogResult <span class="title">GetSummaryList</span><span class="params">( @ApiParam(name = <span class="string">"pageNum"</span>, value = <span class="string">"当前的页码"</span>, required = <span class="keyword">true</span>)</span> </span></span><br><span class="line"><span class="function">                               @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"pageNum"</span>)</span> <span class="keyword">int</span> pageNum,</span></span><br><span class="line"><span class="function">                               @<span class="title">ApiParam</span><span class="params">(name = <span class="string">"pageSize"</span>, value = <span class="string">"一页显示数量"</span>, required = <span class="keyword">true</span>)</span> </span></span><br><span class="line"><span class="function">                               @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"pageSize"</span>)</span> <span class="keyword">int</span> pageSize,</span></span><br><span class="line"><span class="function">                               @<span class="title">ApiParam</span><span class="params">(name = <span class="string">"categoryId"</span>, value = <span class="string">"分类的ID"</span>, required = <span class="keyword">true</span>)</span> </span></span><br><span class="line"><span class="function">                               @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"categoryId"</span>)</span> <span class="keyword">int</span> categoryId)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BlogResult.success(<span class="string">"查询成功"</span>,summaryService.summaryPage(pageNum,pageSize,categoryId));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="ApiParam注解说明"><a href="#ApiParam注解说明" class="headerlink" title="@ApiParam注解说明"></a>@ApiParam注解说明</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiParam</span>： 用在请求方法中，描述参数信息</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+<td>参数名称，参数名称可以覆盖方法参数名称，路径参数必须与方法参数一致</td>
+</tr>
+<tr>
+<td>value</td>
+<td>参数的简要说明</td>
+</tr>
+<tr>
+<td>defaultValue</td>
+<td>参数默认值</td>
+</tr>
+<tr>
+<td>required</td>
+<td>属性是否必填，默认为false [路径参数必须填]</td>
+</tr>
+</tbody></table>
+<p>实体类上注解（采用了lombok省略了setter与gettter）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@ApiModel</span>(description = <span class="string">"文章分类"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Category</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"分类ID"</span>,name = <span class="string">"id"</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"类别名称"</span>,name = <span class="string">"categoryName"</span>)</span><br><span class="line">    <span class="keyword">private</span> String categoryName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="ApiModel注解说明"><a href="#ApiModel注解说明" class="headerlink" title="@ApiModel注解说明"></a>@ApiModel注解说明</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@ApiModel：用于响应类上，表示一个返回响应数据的信息</span><br></pre></td></tr></table></figure>
+
+<p>这个就是一个description描述属性</p>
+<h4 id="ApiModedProperty注解说明"><a href="#ApiModedProperty注解说明" class="headerlink" title="@ApiModedProperty注解说明"></a>@ApiModedProperty注解说明</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiModelProperty</span>：用在属性上，描述响应类的属性</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>此属性的简要说明</td>
+</tr>
+<tr>
+<td>name</td>
+<td>允许覆盖属性名称</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E6%9F%90%E5%8E%82%E4%B8%80%E9%81%932sum%E7%9A%84%E6%9C%BA%E8%AF%95%E9%A2%98,%E6%88%91%E7%AB%9F%E7%84%B6%E7%9B%B4%E6%8E%A5%E8%A2%AB%E6%B7%98%E6%B1%B0%E4%BA%86/" rel="prev" title="某厂一道2sum的机试题,我竟然直接被淘汰了">
+      <i class="fa fa-chevron-left"></i> 某厂一道2sum的机试题,我竟然直接被淘汰了
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E3%80%81%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E3%80%81%E7%81%B0%E5%BA%A6%E7%8E%AF%E5%A2%83%E3%80%81%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88%E7%8E%A9%E6%84%8F%EF%BC%9F/" rel="next" title="生产环境、测试环境、灰度环境、开发环境究竟是什么玩意？">
+      生产环境、测试环境、灰度环境、开发环境究竟是什么玩意？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）"><span class="nav-number">1.</span> <span class="nav-text">什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-了解RESTful"><span class="nav-number">1.2.</span> <span class="nav-text">1.了解RESTful</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-RESTful规范"><span class="nav-number">1.3.</span> <span class="nav-text">2.RESTful规范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#URI规范参考"><span class="nav-number">1.3.1.</span> <span class="nav-text">URI规范参考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-统一返回值封装"><span class="nav-number">1.4.</span> <span class="nav-text">3.统一返回值封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Swagger介绍"><span class="nav-number">1.5.</span> <span class="nav-text">4.Swagger介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-上手Swagger"><span class="nav-number">1.6.</span> <span class="nav-text">5.上手Swagger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#导入Swagger的依赖包"><span class="nav-number">1.6.1.</span> <span class="nav-text">导入Swagger的依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-SwaggerConfig-配置类"><span class="nav-number">1.6.2.</span> <span class="nav-text">创建 SwaggerConfig 配置类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为你接口加上中文注释"><span class="nav-number">1.6.3.</span> <span class="nav-text">为你接口加上中文注释</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Api注解说明"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">@Api注解说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApiOperation注解说明"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">@ApiOperation注解说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApiParam注解说明"><span class="nav-number">1.6.3.3.</span> <span class="nav-text">@ApiParam注解说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApiModel注解说明"><span class="nav-number">1.6.3.4.</span> <span class="nav-text">@ApiModel注解说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApiModedProperty注解说明"><span class="nav-number">1.6.3.5.</span> <span class="nav-text">@ApiModedProperty注解说明</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

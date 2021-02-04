@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="采用缓存实现百万QPS的点赞1.Spring的缓存抽象Spring很贴心地为我们提供了缓存的抽象，对于缓存的具体实现我们可以自己去自定义，我们就采用Redis作为我们的缓存实现吧~ Spring开启缓存很简单，只需要加一个注解即可  1@EnableCaching    落地到我们的博客项目就是 12345678@SpringBootApplication@MapperScan(&quot;com.waib">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博客项目&#x2F;笔记&#x2F;采用缓存实现百万QPS的点赞">
+<meta property="og:url" content="https://waibizi.github.io/2021/01/16/%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE/%E7%AC%94%E8%AE%B0/%E9%87%87%E7%94%A8%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0%E7%99%BE%E4%B8%87QPS%E7%9A%84%E7%82%B9%E8%B5%9E/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="采用缓存实现百万QPS的点赞1.Spring的缓存抽象Spring很贴心地为我们提供了缓存的抽象，对于缓存的具体实现我们可以自己去自定义，我们就采用Redis作为我们的缓存实现吧~ Spring开启缓存很简单，只需要加一个注解即可  1@EnableCaching    落地到我们的博客项目就是 12345678@SpringBootApplication@MapperScan(&quot;com.waib">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-16T13:35:09.195Z">
+<meta property="article:modified_time" content="2020-08-04T08:18:21.956Z">
+<meta property="article:author" content="歪鼻子">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://waibizi.github.io/2021/01/16/%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE/%E7%AC%94%E8%AE%B0/%E9%87%87%E7%94%A8%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0%E7%99%BE%E4%B8%87QPS%E7%9A%84%E7%82%B9%E8%B5%9E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>博客项目/笔记/采用缓存实现百万QPS的点赞 | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2021/01/16/%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE/%E7%AC%94%E8%AE%B0/%E9%87%87%E7%94%A8%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0%E7%99%BE%E4%B8%87QPS%E7%9A%84%E7%82%B9%E8%B5%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          博客项目/笔记/采用缓存实现百万QPS的点赞
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-16 21:35:09" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-08-04 16:18:21" itemprop="dateModified" datetime="2020-08-04T16:18:21+08:00">2020-08-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="采用缓存实现百万QPS的点赞"><a href="#采用缓存实现百万QPS的点赞" class="headerlink" title="采用缓存实现百万QPS的点赞"></a>采用缓存实现百万QPS的点赞</h1><h2 id="1-Spring的缓存抽象"><a href="#1-Spring的缓存抽象" class="headerlink" title="1.Spring的缓存抽象"></a>1.Spring的缓存抽象</h2><p>Spring很贴心地为我们提供了缓存的抽象，对于缓存的具体实现我们可以自己去自定义，我们就采用Redis作为我们的缓存实现吧~</p>
+<center>Spring开启缓存很简单，只需要加一个注解即可</center>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableCaching</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>落地到我们的博客项目就是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan</span>(<span class="string">"com.waibizi.blog.project.mapper"</span>)</span><br><span class="line"><span class="meta">@EnableCaching</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlogApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(BlogApplication<span class="class">.<span class="keyword">class</span>,<span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.SpringBoot工程配置Redis</p>
+<h3 id="加依赖"><a href="#加依赖" class="headerlink" title="加依赖"></a>加依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置RedisConfig类"><a href="#配置RedisConfig类" class="headerlink" title="配置RedisConfig类"></a>配置RedisConfig类</h3><p>这里有一个不常用的注解跟大家解释一下含义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConditionalOnMissingBean</span>  →  这个玩意就是根据条件往IOC容器里面去注入Bean</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.framework.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonAutoDetect;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.PropertyAccessor;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.connection.RedisConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.StringRedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.net.UnknownHostException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 0:11</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注解<span class="doctag">@ConditionalOnMissingBean</span>是根据条件注入Bean，如果IOC容器当中存在这个name值的Bean，我们就不注入</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> redisConnectionFactory</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span>(name = <span class="string">"redisTemplate"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> RedisTemplate&lt;String,Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory redisConnectionFactory)</span></span>&#123;</span><br><span class="line">        <span class="comment">/* 序列化比较参考:https://www.cnblogs.com/donfaquir/p/10594199.html */</span></span><br><span class="line">        Jackson2JsonRedisSerializer&lt;Object&gt; jackson2JsonRedisSerializer =</span><br><span class="line">                <span class="keyword">new</span> Jackson2JsonRedisSerializer&lt;&gt;(Object<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        <span class="comment">/* ObjectMapper可以将Java对象匹配JSON结构 */</span></span><br><span class="line">        ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        <span class="comment">/* 设置属性的自动发现 */</span></span><br><span class="line">        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);</span><br><span class="line">        RedisTemplate&lt;String, Object&gt; redisTemplate = <span class="keyword">new</span> RedisTemplate&lt;&gt;();</span><br><span class="line">        <span class="comment">/* 对于Redis的一些参数设置 */</span></span><br><span class="line">        redisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line">        redisTemplate.setKeySerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        <span class="comment">/* 初始化bean的时候执行，可以针对某个具体的bean进行配置 */</span></span><br><span class="line">        redisTemplate.afterPropertiesSet();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对于字符串的Redis操作</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> redisConnectionFactory</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> UnknownHostException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span>(StringRedisTemplate<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">StringRedisTemplate</span> <span class="title">stringRedisTemplate</span>(<span class="title">RedisConnectionFactory</span> <span class="title">redisConnectionFactory</span>) </span>&#123;</span><br><span class="line">        StringRedisTemplate stringRedisTemplate = <span class="keyword">new</span> StringRedisTemplate();</span><br><span class="line">        stringRedisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line">        <span class="keyword">return</span> stringRedisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="将Redis的位图操作分离出来"><a href="#将Redis的位图操作分离出来" class="headerlink" title="将Redis的位图操作分离出来"></a>将Redis的位图操作分离出来</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.framework.common.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisCallback;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 1:29</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisUtils</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 位图Set操作</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> offset 参数必须大于或等于 0 ，小于 2^32 (bit 映射被限制在 512 MB 之内)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> value</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBit</span><span class="params">(String key, Long offset, Boolean value)</span> </span>&#123;</span><br><span class="line">        redisTemplate.execute((RedisCallback&lt;Boolean&gt;)</span><br><span class="line">                con -&gt;con.setBit(key.getBytes(),offset,value));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Boolean <span class="title">getBit</span><span class="params">(String key, Integer offset)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (Boolean) redisTemplate.execute((RedisCallback&lt;Boolean&gt;)</span><br><span class="line">                con -&gt; con.getBit(key.getBytes(),offset));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 计算位图的key的值是多少，即统计</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">bitCount</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (Long) redisTemplate.execute((RedisCallback&lt;Long&gt;)</span><br><span class="line">                con -&gt; con.bitCount(key.getBytes()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-业务逻辑"><a href="#2-业务逻辑" class="headerlink" title="2.业务逻辑"></a>2.业务逻辑</h2><h3 id="控制层"><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.project.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.framework.common.result.BlogResult;</span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.framework.common.utils.HttpUtils;</span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.project.service.ArticleService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PutMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/7/26 10:31</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArticleController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ArticleService articleService;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 接收文章的ID，然后再从HttpServletRequest当中获取对应的IP</span></span><br><span class="line"><span class="comment">     * 将IP值经过哈希运算之后插入到Redis当中</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@PutMapping</span>(<span class="string">"/article/like/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> BlogResult <span class="title">likeArticle</span><span class="params">(HttpServletRequest request,</span></span></span><br><span class="line"><span class="function"><span class="params">                                  @PathVariable Integer id)</span></span>&#123;</span><br><span class="line">        articleService.increLike(id.toString(),HttpUtils.getIpAddr(request).hashCode());</span><br><span class="line">        <span class="keyword">return</span> BlogResult.success(<span class="string">"点赞成功"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="服务层接口"><a href="#服务层接口" class="headerlink" title="服务层接口"></a>服务层接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.project.service;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 1:05</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleService</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 传入文章的ID即可点赞</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">increLike</span><span class="params">(String articleId, Integer ipCode)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从Redis读取文章的点赞计数集合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">transLikedCountFromRedis2DB</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="服务层实现层"><a href="#服务层实现层" class="headerlink" title="服务层实现层"></a>服务层实现层</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.project.service.impl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.framework.common.utils.RedisUtils;</span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.project.mapper.ArticleMapper;</span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.project.service.ArticleService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 1:07</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArticleServiceImpl</span> <span class="keyword">implements</span> <span class="title">ArticleService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RedisUtils redisUtils;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    ArticleMapper articleMapper;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increLike</span><span class="params">(String articleId, Integer ipCode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (redisUtils.getBit(articleId,ipCode))&#123;</span><br><span class="line">            redisUtils.setBit(articleId, Long.valueOf(ipCode),<span class="keyword">false</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            redisUtils.setBit(articleId, Long.valueOf(ipCode),<span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将Redis的文章计数同步到数据库当中</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transLikedCountFromRedis2DB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;Long&gt; list = articleMapper.getArticleIdList();</span><br><span class="line">        Map&lt;String,Long&gt; countMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Long id:</span><br><span class="line">             list) &#123;</span><br><span class="line">            countMap.put(<span class="string">"id"</span>,id);</span><br><span class="line">            countMap.put(<span class="string">"like"</span>,redisUtils.bitCount(String.valueOf(id)));</span><br><span class="line">            articleMapper.updateCount(countMap);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Mapper接口"><a href="#Mapper接口" class="headerlink" title="Mapper接口"></a>Mapper接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.project.mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 15:11</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleMapper</span> </span>&#123;</span><br><span class="line">    <span class="function">List&lt;Long&gt; <span class="title">getArticleIdList</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">updateCount</span><span class="params">(Map&lt;String,Long&gt; countMap)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Mapper的xml文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//mybatis.org//DTD Mapper 3.0//EN"</span></span></span><br><span class="line"><span class="meta">        <span class="meta-string">"http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.waibizi.blog.project.mapper.ArticleMapper"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"getArticleIdList"</span> <span class="attr">resultType</span>=<span class="string">"java.lang.Long"</span>&gt;</span></span><br><span class="line">        SELECT id FROM article</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">"updateCount"</span> <span class="attr">parameterType</span>=<span class="string">"java.util.Map"</span>&gt;</span></span><br><span class="line">        UPDATE article SET like_count = #&#123;like&#125; WHERE id = #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-定时任务"><a href="#3-定时任务" class="headerlink" title="3.定时任务"></a>3.定时任务</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.framework.quartz;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.quartz.*;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 14:56</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuartzConfig</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LIKE_TASK_IDENTITY = <span class="string">"LikeTaskQuartz"</span>;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> JobDetail <span class="title">quartzDetail</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> JobBuilder.newJob(LikeTask<span class="class">.<span class="keyword">class</span>).<span class="title">withIdentity</span>(<span class="title">LIKE_TASK_IDENTITY</span>).<span class="title">storeDurably</span>().<span class="title">build</span>()</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Trigger <span class="title">quartzTrigger</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()</span><br><span class="line">                <span class="comment">/* 每十二个小时执行一次 */</span></span><br><span class="line">                .withIntervalInHours(<span class="number">12</span>)</span><br><span class="line">                .repeatForever();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> TriggerBuilder.newTrigger().forJob(quartzDetail())</span><br><span class="line">                .withIdentity(LIKE_TASK_IDENTITY)</span><br><span class="line">                .withSchedule(scheduleBuilder)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="具体任务"><a href="#具体任务" class="headerlink" title="具体任务"></a>具体任务</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.framework.quartz;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.waibizi.blog.project.service.ArticleService;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.quartz.JobExecutionContext;</span><br><span class="line"><span class="keyword">import</span> org.quartz.JobExecutionException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.quartz.QuartzJobBean;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 14:55</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LikeTask</span> <span class="keyword">extends</span> <span class="title">QuartzJobBean</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ArticleService articleService;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">executeInternal</span><span class="params">(JobExecutionContext jobExecutionContext)</span> <span class="keyword">throws</span> JobExecutionException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"----任务同步-----"</span>);</span><br><span class="line">        articleService.transLikedCountFromRedis2DB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-附加"><a href="#4-附加" class="headerlink" title="4.附加"></a>4.附加</h2><h3 id="Http工具类"><a href="#Http工具类" class="headerlink" title="Http工具类"></a>Http工具类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.waibizi.blog.framework.common.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> java.net.InetAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.UnknownHostException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 歪鼻子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/8/4 2:05</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpUtils</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取用户的真实IP地址</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getIpAddr</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        String ipAddress = request.getHeader(<span class="string">"x-forwarded-for"</span>);</span><br><span class="line">        <span class="keyword">if</span> (ipAddress == <span class="keyword">null</span> || ipAddress.length() == <span class="number">0</span> || <span class="string">"unknown"</span>.equalsIgnoreCase(ipAddress)) &#123;</span><br><span class="line">            ipAddress = request.getHeader(<span class="string">"Proxy-Client-IP"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (ipAddress == <span class="keyword">null</span> || ipAddress.length() == <span class="number">0</span> || <span class="string">"unknown"</span>.equalsIgnoreCase(ipAddress)) &#123;</span><br><span class="line">            ipAddress = request.getHeader(<span class="string">"WL-Proxy-Client-IP"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (ipAddress == <span class="keyword">null</span> || ipAddress.length() == <span class="number">0</span> || <span class="string">"unknown"</span>.equalsIgnoreCase(ipAddress)) &#123;</span><br><span class="line">            ipAddress = request.getRemoteAddr();</span><br><span class="line">            String localIp = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">            String localIpv6 = <span class="string">"0:0:0:0:0:0:0:1"</span>;</span><br><span class="line">            <span class="keyword">if</span> (ipAddress.equals(localIp) || ipAddress.equals(localIpv6)) &#123;</span><br><span class="line">                <span class="comment">// 根据网卡取本机配置的IP</span></span><br><span class="line">                InetAddress inet = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    inet = InetAddress.getLocalHost();</span><br><span class="line">                    ipAddress = inet.getHostAddress();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (UnknownHostException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割</span></span><br><span class="line">        String ipSeparate = <span class="string">","</span>;</span><br><span class="line">        <span class="keyword">int</span> ipLength = <span class="number">15</span>;</span><br><span class="line">        <span class="keyword">if</span> (ipAddress != <span class="keyword">null</span> &amp;&amp; ipAddress.length() &gt; ipLength) &#123;</span><br><span class="line">            <span class="keyword">if</span> (ipAddress.indexOf(ipSeparate) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                ipAddress = ipAddress.substring(<span class="number">0</span>, ipAddress.indexOf(ipSeparate));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ipAddress;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE/%E7%AC%94%E8%AE%B0/%E5%8D%9A%E5%AE%A2%E5%90%8E%E7%AB%AF/" rel="prev" title="博客项目/笔记/博客后端">
+      <i class="fa fa-chevron-left"></i> 博客项目/笔记/博客后端
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/16/Java%E5%BD%93%E4%B8%AD%E9%87%87%E7%94%A8new%E5%85%B3%E9%94%AE%E5%AD%97%E5%88%9B%E5%BB%BA%E7%9A%84%E5%AF%B9%E8%B1%A1%E7%9C%9F%E7%9A%84%E4%BC%9A%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%90%97%EF%BC%9F/" rel="next" title="Java当中采用new关键字创建的对象真的会在堆上吗？">
+      Java当中采用new关键字创建的对象真的会在堆上吗？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#采用缓存实现百万QPS的点赞"><span class="nav-number">1.</span> <span class="nav-text">采用缓存实现百万QPS的点赞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Spring的缓存抽象"><span class="nav-number">1.1.</span> <span class="nav-text">1.Spring的缓存抽象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加依赖"><span class="nav-number">1.1.1.</span> <span class="nav-text">加依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置RedisConfig类"><span class="nav-number">1.1.2.</span> <span class="nav-text">配置RedisConfig类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将Redis的位图操作分离出来"><span class="nav-number">1.1.3.</span> <span class="nav-text">将Redis的位图操作分离出来</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-业务逻辑"><span class="nav-number">1.2.</span> <span class="nav-text">2.业务逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#控制层"><span class="nav-number">1.2.1.</span> <span class="nav-text">控制层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务层接口"><span class="nav-number">1.2.2.</span> <span class="nav-text">服务层接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务层实现层"><span class="nav-number">1.2.3.</span> <span class="nav-text">服务层实现层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper接口"><span class="nav-number">1.2.4.</span> <span class="nav-text">Mapper接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-定时任务"><span class="nav-number">1.3.</span> <span class="nav-text">3.定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">1.3.1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体任务"><span class="nav-number">1.3.2.</span> <span class="nav-text">具体任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-附加"><span class="nav-number">1.4.</span> <span class="nav-text">4.附加</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Http工具类"><span class="nav-number">1.4.1.</span> <span class="nav-text">Http工具类</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

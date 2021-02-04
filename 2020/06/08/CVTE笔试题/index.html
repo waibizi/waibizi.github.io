@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="CVTE笔试题1.以下说法正确的有(A、B)A.多个进程操作同一个文件时，应该要考虑到文件的一致性问题 B.可通过文件在不同进程间进行数据传递和共享 C.可以通过全局变量在不同进程间传递数据 D.一个进程可以访问到所有物理内存空间 2.IP数据报分片的重组通常发生在( D )A.源主机和数据报经过的路由器上 B.源主机上 C.数据报经过的路由器上 D.目的主机上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVTE笔试题">
+<meta property="og:url" content="https://waibizi.github.io/2020/06/08/CVTE%E7%AC%94%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="CVTE笔试题1.以下说法正确的有(A、B)A.多个进程操作同一个文件时，应该要考虑到文件的一致性问题 B.可通过文件在不同进程间进行数据传递和共享 C.可以通过全局变量在不同进程间传递数据 D.一个进程可以访问到所有物理内存空间 2.IP数据报分片的重组通常发生在( D )A.源主机和数据报经过的路由器上 B.源主机上 C.数据报经过的路由器上 D.目的主机上">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl9TRNWAPUjIAACbjKM_nGs556.jpg">
+<meta property="article:published_time" content="2020-06-08T13:42:43.000Z">
+<meta property="article:modified_time" content="2021-01-16T13:42:22.468Z">
+<meta property="article:author" content="歪鼻子">
+<meta property="article:tag" content="笔试">
+<meta property="article:tag" content="CVTE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl9TRNWAPUjIAACbjKM_nGs556.jpg">
+
+<link rel="canonical" href="https://waibizi.github.io/2020/06/08/CVTE%E7%AC%94%E8%AF%95%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CVTE笔试题 | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2020/06/08/CVTE%E7%AC%94%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CVTE笔试题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-08 21:42:43" itemprop="dateCreated datePublished" datetime="2020-06-08T21:42:43+08:00">2020-06-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-16 21:42:22" itemprop="dateModified" datetime="2021-01-16T21:42:22+08:00">2021-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">-笔试面试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="CVTE笔试题"><a href="#CVTE笔试题" class="headerlink" title="CVTE笔试题"></a>CVTE笔试题</h1><h2 id="1-以下说法正确的有-A、B"><a href="#1-以下说法正确的有-A、B" class="headerlink" title="1.以下说法正确的有(A、B)"></a>1.以下说法正确的有(A、B)</h2><p>A.多个进程操作同一个文件时，应该要考虑到文件的一致性问题</p>
+<p>B.可通过文件在不同进程间进行数据传递和共享</p>
+<p>C.可以通过全局变量在不同进程间传递数据</p>
+<p>D.一个进程可以访问到所有物理内存空间</p>
+<h2 id="2-IP数据报分片的重组通常发生在-D"><a href="#2-IP数据报分片的重组通常发生在-D" class="headerlink" title="2.IP数据报分片的重组通常发生在( D )"></a>2.IP数据报分片的重组通常发生在( D )</h2><p>A.源主机和数据报经过的路由器上</p>
+<p>B.源主机上</p>
+<p>C.数据报经过的路由器上</p>
+<p>D.目的主机上</p>
+<a id="more"></a>
+
+<h2 id="3-引入多道程序技术以后，处理器的利用率-C"><a href="#3-引入多道程序技术以后，处理器的利用率-C" class="headerlink" title="3.引入多道程序技术以后，处理器的利用率( C )"></a>3.引入多道程序技术以后，处理器的利用率( C )</h2><p>A.降低了    B.没有变化，只是程序的执行方便了    C.大大提高    D.没有影响</p>
+<h2 id="4-关于TCP协议以下说法正确的是：（-B，D-）"><a href="#4-关于TCP协议以下说法正确的是：（-B，D-）" class="headerlink" title="4.关于TCP协议以下说法正确的是：（ B，D ）"></a>4.关于TCP协议以下说法正确的是：（ B，D ）</h2><p>A.通讯双方被动关闭的一方进入TIME_WAIT状态    </p>
+<p>B.TIME_WAIT状态会持续2个MSL</p>
+<p>C.TIME_WAIT状态会持续1个MSL</p>
+<p>D.通讯双方主动关闭的一方进入TIME_WAIT状态</p>
+<h2 id="5-以下说法正确的是-A"><a href="#5-以下说法正确的是-A" class="headerlink" title="5.以下说法正确的是( A )"></a>5.以下说法正确的是( A )</h2><p>A.在计算机中，运算器访问寄存器的速度是最快的</p>
+<p>B.在等待中断的过程中，CPU不可以处理其他任务</p>
+<p>C.同一段代码每次运行的时间一定是一样的</p>
+<p>D.软中断是由软件触发的一种中断</p>
+<h2 id="6-一个栈的入栈序列为ABCDE-则不可能的出栈序列为（-A、B-）"><a href="#6-一个栈的入栈序列为ABCDE-则不可能的出栈序列为（-A、B-）" class="headerlink" title="6.一个栈的入栈序列为ABCDE,则不可能的出栈序列为（ A、B ）"></a>6.一个栈的入栈序列为ABCDE,则不可能的出栈序列为（ A、B ）</h2><p>A.ECDBA        B.DCEAB    C.DECBA    D.ABCDE</p>
+<h2 id="7-TCP首部报文信息中跟建立链接有关的是（B、D）"><a href="#7-TCP首部报文信息中跟建立链接有关的是（B、D）" class="headerlink" title="7.TCP首部报文信息中跟建立链接有关的是（B、D）"></a>7.TCP首部报文信息中跟建立链接有关的是（B、D）</h2><p>A.PSH    B.SYN    C.FIN    D.ACK</p>
+<p>解析：</p>
+<p>  <strong>URG:紧急指针字段值有效</strong></p>
+<p>  <strong>SYN: 表示建立连接</strong>  </p>
+<p>  <strong>FIN: 表示关闭连接</strong>  </p>
+<p>  <strong>ACK: 表示响应</strong>  </p>
+<p>  <strong>PSH: 表示有 DATA数据传输</strong>  </p>
+<p>  <strong>RST: 表示连接重置。</strong>  </p>
+<h2 id="8-已知图的邻接表如下所示，根据算法，则从节点0出发按广度优先遍历的节点序列是-（）"><a href="#8-已知图的邻接表如下所示，根据算法，则从节点0出发按广度优先遍历的节点序列是-（）" class="headerlink" title="8.已知图的邻接表如下所示，根据算法，则从节点0出发按广度优先遍历的节点序列是 （）"></a>8.已知图的邻接表如下所示，根据算法，则从节点0出发按广度优先遍历的节点序列是 （）</h2><div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl9TRNWAPUjIAACbjKM_nGs556.jpg" height="50%" width="50%"></div>
+
+
+
+<p>A.0 1 2 3            B.0 1 3 2        C.0 3 2 1        D.0 3 1 2</p>
+<h2 id="9-以下说法正确的有-D"><a href="#9-以下说法正确的有-D" class="headerlink" title="9.以下说法正确的有( D )"></a>9.以下说法正确的有( D )</h2><p>A.在时间片轮询调度算法中，时间片越短则CPU利用率越高</p>
+<p>B.优先级越高的进程占用CPU的运行时间就一定越多</p>
+<p>C.在遍历大型二维数组int a[x][y]时，先遍历x或先遍历y的处理时间都是一样的</p>
+<p>D.使用cache可以提高CPU的利用率</p>
+<h2 id="10-设一组初始关键字记录关键字为（19-15-12-18-21-36-45-10-则以19位基准记录的一趟快速排序结束后的结果为-A"><a href="#10-设一组初始关键字记录关键字为（19-15-12-18-21-36-45-10-则以19位基准记录的一趟快速排序结束后的结果为-A" class="headerlink" title="10.设一组初始关键字记录关键字为（19,15,12,18,21,36,45,10),则以19位基准记录的一趟快速排序结束后的结果为( A )"></a>10.设一组初始关键字记录关键字为（19,15,12,18,21,36,45,10),则以19位基准记录的一趟快速排序结束后的结果为( A )</h2><p>A.10,15,12,18,19,36,45,21</p>
+<p>B.10,15,12,18,19,45,36,21</p>
+<p>C.15,10,12,18,19,36,45,21</p>
+<p>D.10,15,12,19,18,45,36,21</p>
+<h2 id="11-具有1000个节点的二叉树的最小深度为（-D-）-第一层深度为1）"><a href="#11-具有1000个节点的二叉树的最小深度为（-D-）-第一层深度为1）" class="headerlink" title="11.具有1000个节点的二叉树的最小深度为（ D ）(第一层深度为1）"></a>11.具有1000个节点的二叉树的最小深度为（ D ）(第一层深度为1）</h2><p>A.11                 B.12                    C.9                    D.10</p>
+<h2 id="12-若进栈序列为1-2-3-4假定进栈和出栈可以穿插进行，则可能的出栈序列是"><a href="#12-若进栈序列为1-2-3-4假定进栈和出栈可以穿插进行，则可能的出栈序列是" class="headerlink" title="12.若进栈序列为1,2,3.4假定进栈和出栈可以穿插进行，则可能的出栈序列是()"></a>12.若进栈序列为1,2,3.4假定进栈和出栈可以穿插进行，则可能的出栈序列是()</h2><p>A.2,4,1,3            B.3,1,4,2            C.3,4,1,2        D.1,2,3,4</p>
+<h2 id="13-以下程序统计给定输入中每个大写字母的出现次数-不需要检查输入合法性（）"><a href="#13-以下程序统计给定输入中每个大写字母的出现次数-不需要检查输入合法性（）" class="headerlink" title="13.以下程序统计给定输入中每个大写字母的出现次数(不需要检查输入合法性（）"></a>13.以下程序统计给定输入中每个大写字母的出现次数(不需要检查输入合法性（）</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AlphabetCounting</span><span class="params">(<span class="keyword">char</span> a[],<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> count[<span class="number">26</span>]=&#123;&#125;,i,kind=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;++i) (<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">26</span>;++i)&#123;</span><br><span class="line">    <span class="keyword">if</span>(++kind&gt;<span class="number">1</span>) putchar(<span class="string">';'</span>);</span><br><span class="line">    printf(<span class="string">"%c=%d"</span>,(<span class="number">2</span>));</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>A.++count[a[i]-‘Z’];’Z’-i,count[‘Z’-i]</p>
+<p>B.++count[‘A’-a[i]];’A’+i,count[i]</p>
+<p>C.++count[i];i,count[i]</p>
+<p>D.++count[‘Z’-a[i]];’Z’-i,count[i]</p>
+<p>E.++count[a[i]];’A’+i,count[a[i]]</p>
+<h2 id="14-设非空二叉树中度数为0的结点数为n0，度数为1的结点数为n1-度数为2的结点数为n2-则下列等式成立的是（-C-）"><a href="#14-设非空二叉树中度数为0的结点数为n0，度数为1的结点数为n1-度数为2的结点数为n2-则下列等式成立的是（-C-）" class="headerlink" title="14.设非空二叉树中度数为0的结点数为n0，度数为1的结点数为n1,度数为2的结点数为n2,则下列等式成立的是（ C ）"></a>14.设非空二叉树中度数为0的结点数为n0，度数为1的结点数为n1,度数为2的结点数为n2,则下列等式成立的是（ C ）</h2><p>A.n0=n1+n2</p>
+<p>B.n0=2n1+1</p>
+<p>C.n0=n2+1</p>
+<p>D.n0=n1+1</p>
+<h2 id="15-IP地址205-140-36-68的哪一部分表示网络号"><a href="#15-IP地址205-140-36-68的哪一部分表示网络号" class="headerlink" title="15.IP地址205.140.36.68的哪一部分表示网络号()"></a>15.IP地址205.140.36.68的哪一部分表示网络号()</h2><p>A.205            B.205.140        C.68            D.205.140.36</p>
+<h2 id="16-一棵深度为4的三叉树，最多有多少个节点？（）"><a href="#16-一棵深度为4的三叉树，最多有多少个节点？（）" class="headerlink" title="16.一棵深度为4的三叉树，最多有多少个节点？（）"></a>16.一棵深度为4的三叉树，最多有多少个节点？（）</h2><p>A.24                B.40                    C.36                D.54</p>
+<h2 id="17-有两个袋子，白色袋子里有7个红球和3个蓝球，黑色袋子里有3个红球和7个蓝球。每次取一个球，取完立刻放回，所有球都从某一个袋子里取，袋子的选择是随机的。共取出6个红球和4个蓝球。问所有球是从黑色袋子里取出的概率是（）"><a href="#17-有两个袋子，白色袋子里有7个红球和3个蓝球，黑色袋子里有3个红球和7个蓝球。每次取一个球，取完立刻放回，所有球都从某一个袋子里取，袋子的选择是随机的。共取出6个红球和4个蓝球。问所有球是从黑色袋子里取出的概率是（）" class="headerlink" title="17.有两个袋子，白色袋子里有7个红球和3个蓝球，黑色袋子里有3个红球和7个蓝球。每次取一个球，取完立刻放回，所有球都从某一个袋子里取，袋子的选择是随机的。共取出6个红球和4个蓝球。问所有球是从黑色袋子里取出的概率是（）"></a>17.有两个袋子，白色袋子里有7个红球和3个蓝球，黑色袋子里有3个红球和7个蓝球。每次取一个球，取完立刻放回，所有球都从某一个袋子里取，袋子的选择是随机的。共取出6个红球和4个蓝球。问所有球是从黑色袋子里取出的概率是（）</h2><p>A.0.1                B.0.48                        C.0.66                    D.0.16</p>
+<h2 id="18-关于二叉树，下面说法正确的是"><a href="#18-关于二叉树，下面说法正确的是" class="headerlink" title="18.关于二叉树，下面说法正确的是()"></a>18.关于二叉树，下面说法正确的是()</h2><p>A.二叉树中至少有一个节点的度为2</p>
+<p>B.一个具有1025个节点的二叉树，其高度范围在11到1025之间</p>
+<p>C.对于n个节点的二叉树，其高度为nlogn</p>
+<p>D.二叉树的先序遍历是EFHIGJK,中序遍历为HFIEJKG,该二叉树的右子树的根为G</p>
+<h2 id="19-以下选项中采用分治方法的算法有（）"><a href="#19-以下选项中采用分治方法的算法有（）" class="headerlink" title="19.以下选项中采用分治方法的算法有（）"></a>19.以下选项中采用分治方法的算法有（）</h2><p>A.堆排序算法    B.插入排序算法    C.归并排序算法    D.二分查找算法    E.快速排序算法</p>
+<ol start="20">
+<li><h2 id="已知有向图G-（V，E）其中V-V1，V2-V3，V4，V5，V6-V7"><a href="#已知有向图G-（V，E）其中V-V1，V2-V3，V4，V5，V6-V7" class="headerlink" title="已知有向图G=（V，E）其中V={V1，V2,V3，V4，V5，V6,V7}"></a>已知有向图G=（V，E）其中V={V1，V2,V3，V4，V5，V6,V7}</h2></li>
+</ol>
+<h2 id="E-lt-V1-V2-gt-lt-V1-V3-gt-lt-V1-V4-gt-lt-V2-V5-gt-lt-V2-V6-gt-lt-V3-V5-gt-lt-V3-V6-gt-lt-V4-V6-gt-lt-V5-V7-gt-lt-V6-V7-gt-则G的拓扑序列是：（）"><a href="#E-lt-V1-V2-gt-lt-V1-V3-gt-lt-V1-V4-gt-lt-V2-V5-gt-lt-V2-V6-gt-lt-V3-V5-gt-lt-V3-V6-gt-lt-V4-V6-gt-lt-V5-V7-gt-lt-V6-V7-gt-则G的拓扑序列是：（）" class="headerlink" title="E={&lt;V1,V2&gt;,&lt;V1,V3&gt;,&lt;V1,V4&gt;,&lt;V2,V5&gt;,&lt;V2,V6&gt;,&lt;V3,V5&gt;,&lt;V3,V6&gt;,&lt;V4,V6&gt;,&lt;V5,V7&gt;,&lt;V6,V7&gt;}, 则G的拓扑序列是：（）"></a>E={&lt;V1,V2&gt;,&lt;V1,V3&gt;,&lt;V1,V4&gt;,&lt;V2,V5&gt;,&lt;V2,V6&gt;,&lt;V3,V5&gt;,&lt;V3,V6&gt;,&lt;V4,V6&gt;,&lt;V5,V7&gt;,&lt;V6,V7&gt;}, 则G的拓扑序列是：（）</h2><p>A.V1, V4，V2，V6, V3，V5，V7</p>
+<p>B.V1，V2，V3，V4, V5，V6，V7</p>
+<p>C.V1，V3, V4，V2，V6，V5，V7</p>
+<p>D.V1，V3，V4, V6，V2, V5，V7</p>
+<h2 id="21-下面算法中可以判断出一个有向图是否有环的是：（）"><a href="#21-下面算法中可以判断出一个有向图是否有环的是：（）" class="headerlink" title="21.下面算法中可以判断出一个有向图是否有环的是：（）"></a>21.下面算法中可以判断出一个有向图是否有环的是：（）</h2><p>A.求最短路径    B.深度优先遍历    C.广度优先遍历    D.拓扑排序</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AF%95/" rel="tag"># 笔试</a>
+              <a href="/tags/CVTE/" rel="tag"># CVTE</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/09/%E3%80%90%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E3%80%91%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" rel="next" title="【线程通信】生产者消费者模型">
+      【线程通信】生产者消费者模型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CVTE笔试题"><span class="nav-number">1.</span> <span class="nav-text">CVTE笔试题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-以下说法正确的有-A、B"><span class="nav-number">1.1.</span> <span class="nav-text">1.以下说法正确的有(A、B)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-IP数据报分片的重组通常发生在-D"><span class="nav-number">1.2.</span> <span class="nav-text">2.IP数据报分片的重组通常发生在( D )</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-引入多道程序技术以后，处理器的利用率-C"><span class="nav-number">1.3.</span> <span class="nav-text">3.引入多道程序技术以后，处理器的利用率( C )</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-关于TCP协议以下说法正确的是：（-B，D-）"><span class="nav-number">1.4.</span> <span class="nav-text">4.关于TCP协议以下说法正确的是：（ B，D ）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-以下说法正确的是-A"><span class="nav-number">1.5.</span> <span class="nav-text">5.以下说法正确的是( A )</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-一个栈的入栈序列为ABCDE-则不可能的出栈序列为（-A、B-）"><span class="nav-number">1.6.</span> <span class="nav-text">6.一个栈的入栈序列为ABCDE,则不可能的出栈序列为（ A、B ）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-TCP首部报文信息中跟建立链接有关的是（B、D）"><span class="nav-number">1.7.</span> <span class="nav-text">7.TCP首部报文信息中跟建立链接有关的是（B、D）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-已知图的邻接表如下所示，根据算法，则从节点0出发按广度优先遍历的节点序列是-（）"><span class="nav-number">1.8.</span> <span class="nav-text">8.已知图的邻接表如下所示，根据算法，则从节点0出发按广度优先遍历的节点序列是 （）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-以下说法正确的有-D"><span class="nav-number">1.9.</span> <span class="nav-text">9.以下说法正确的有( D )</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-设一组初始关键字记录关键字为（19-15-12-18-21-36-45-10-则以19位基准记录的一趟快速排序结束后的结果为-A"><span class="nav-number">1.10.</span> <span class="nav-text">10.设一组初始关键字记录关键字为（19,15,12,18,21,36,45,10),则以19位基准记录的一趟快速排序结束后的结果为( A )</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-具有1000个节点的二叉树的最小深度为（-D-）-第一层深度为1）"><span class="nav-number">1.11.</span> <span class="nav-text">11.具有1000个节点的二叉树的最小深度为（ D ）(第一层深度为1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-若进栈序列为1-2-3-4假定进栈和出栈可以穿插进行，则可能的出栈序列是"><span class="nav-number">1.12.</span> <span class="nav-text">12.若进栈序列为1,2,3.4假定进栈和出栈可以穿插进行，则可能的出栈序列是()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-以下程序统计给定输入中每个大写字母的出现次数-不需要检查输入合法性（）"><span class="nav-number">1.13.</span> <span class="nav-text">13.以下程序统计给定输入中每个大写字母的出现次数(不需要检查输入合法性（）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-设非空二叉树中度数为0的结点数为n0，度数为1的结点数为n1-度数为2的结点数为n2-则下列等式成立的是（-C-）"><span class="nav-number">1.14.</span> <span class="nav-text">14.设非空二叉树中度数为0的结点数为n0，度数为1的结点数为n1,度数为2的结点数为n2,则下列等式成立的是（ C ）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-IP地址205-140-36-68的哪一部分表示网络号"><span class="nav-number">1.15.</span> <span class="nav-text">15.IP地址205.140.36.68的哪一部分表示网络号()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-一棵深度为4的三叉树，最多有多少个节点？（）"><span class="nav-number">1.16.</span> <span class="nav-text">16.一棵深度为4的三叉树，最多有多少个节点？（）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-有两个袋子，白色袋子里有7个红球和3个蓝球，黑色袋子里有3个红球和7个蓝球。每次取一个球，取完立刻放回，所有球都从某一个袋子里取，袋子的选择是随机的。共取出6个红球和4个蓝球。问所有球是从黑色袋子里取出的概率是（）"><span class="nav-number">1.17.</span> <span class="nav-text">17.有两个袋子，白色袋子里有7个红球和3个蓝球，黑色袋子里有3个红球和7个蓝球。每次取一个球，取完立刻放回，所有球都从某一个袋子里取，袋子的选择是随机的。共取出6个红球和4个蓝球。问所有球是从黑色袋子里取出的概率是（）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#18-关于二叉树，下面说法正确的是"><span class="nav-number">1.18.</span> <span class="nav-text">18.关于二叉树，下面说法正确的是()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#19-以下选项中采用分治方法的算法有（）"><span class="nav-number">1.19.</span> <span class="nav-text">19.以下选项中采用分治方法的算法有（）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#已知有向图G-（V，E）其中V-V1，V2-V3，V4，V5，V6-V7"><span class="nav-number">1.20.</span> <span class="nav-text">已知有向图G&#x3D;（V，E）其中V&#x3D;{V1，V2,V3，V4，V5，V6,V7}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#E-lt-V1-V2-gt-lt-V1-V3-gt-lt-V1-V4-gt-lt-V2-V5-gt-lt-V2-V6-gt-lt-V3-V5-gt-lt-V3-V6-gt-lt-V4-V6-gt-lt-V5-V7-gt-lt-V6-V7-gt-则G的拓扑序列是：（）"><span class="nav-number">1.21.</span> <span class="nav-text">E&#x3D;{&lt;V1,V2&gt;,&lt;V1,V3&gt;,&lt;V1,V4&gt;,&lt;V2,V5&gt;,&lt;V2,V6&gt;,&lt;V3,V5&gt;,&lt;V3,V6&gt;,&lt;V4,V6&gt;,&lt;V5,V7&gt;,&lt;V6,V7&gt;}, 则G的拓扑序列是：（）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#21-下面算法中可以判断出一个有向图是否有环的是：（）"><span class="nav-number">1.22.</span> <span class="nav-text">21.下面算法中可以判断出一个有向图是否有环的是：（）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

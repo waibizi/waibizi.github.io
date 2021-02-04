@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="单点登录就是这么简单1.前言单点登录的全称是Single Sign On，随着公司的产品日益增多，每一个系统都做登录功能显然不现实，而单点登录可以做到多系统只使用一次登录。 单点登录的原理就是让用户拿着一个令牌，所有的系统都可以检验到这个令牌是否有效。而在不同的系统跳转的时候，这个令牌也会自动携带，这个涉及到二级域名cookie共享，有兴趣的自行了解。 2.实现前言提到我们所有的系统都可以检验到这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单点登录就是这么简单">
+<meta property="og:url" content="https://waibizi.github.io/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="单点登录就是这么简单1.前言单点登录的全称是Single Sign On，随着公司的产品日益增多，每一个系统都做登录功能显然不现实，而单点登录可以做到多系统只使用一次登录。 单点登录的原理就是让用户拿着一个令牌，所有的系统都可以检验到这个令牌是否有效。而在不同的系统跳转的时候，这个令牌也会自动携带，这个涉及到二级域名cookie共享，有兴趣的自行了解。 2.实现前言提到我们所有的系统都可以检验到这">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4uyCAW7j2AAXQeo9kIlM694.jpg">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4s5KAGtZhAAKBgLq20Ao921.jpg">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4s9yAb0UuAAfBXDt-4pk865.jpg">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4tQmANTzEAAvaC7xQuts764.jpg">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4u_KAA1_uAAXmkx_u-PQ225.jpg">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4vC6AKyN0AAkfBEdKtxM833.jpg">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4vJOAEcZ6AA1bUwfFzLo941.jpg">
+<meta property="article:published_time" content="2021-01-16T13:35:09.799Z">
+<meta property="article:modified_time" content="2021-01-16T13:54:27.265Z">
+<meta property="article:author" content="歪鼻子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4uyCAW7j2AAXQeo9kIlM694.jpg">
+
+<link rel="canonical" href="https://waibizi.github.io/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>单点登录就是这么简单 | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          单点登录就是这么简单
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:54:27" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="单点登录就是这么简单"><a href="#单点登录就是这么简单" class="headerlink" title="单点登录就是这么简单"></a>单点登录就是这么简单</h1><h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h2><p>单点登录的全称是Single Sign On，随着公司的产品日益增多，每一个系统都做登录功能显然不现实，而单点登录可以做到多系统只使用一次登录。</p>
+<p>单点登录的原理就是让用户拿着一个令牌，所有的系统都可以检验到这个令牌是否有效。而在不同的系统跳转的时候，这个令牌也会自动携带，这个涉及到二级域名cookie共享，有兴趣的自行了解。</p>
+<h2 id="2-实现"><a href="#2-实现" class="headerlink" title="2.实现"></a>2.实现</h2><p>前言提到我们所有的系统都可以检验到这个令牌是否有效，这里我采用redis来做分布式共享。</p>
+<p>为了演示的方便，演示代码不涉及到DB操作，直接在配置文件声明一个用户</p>
+<p>既然我们说我们校验的叫“令牌”，那么这个令牌必须就是唯一的，所以我们可以采用UUID</p>
+<p>先看下包结构</p>
+ <a id="more"></a>
+
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4uyCAW7j2AAXQeo9kIlM694.jpg" height="50%" width="50%"></div>
+
+
+
+<p>实现代码比较简单，我截图关键代码讲，相关代码实现会上传到github上，微信公众号后台回复sso-demo即可</p>
+<p>用户信息类</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4s5KAGtZhAAKBgLq20Ao921.jpg" height="50%" width="50%"></div>
+
+<p>直接读取的是配置文件配置信息</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4s9yAb0UuAAfBXDt-4pk865.jpg" height="50%" width="50%"></div>
+
+<p>由于redis持久化序列化的需要，这里对于redis重新配置</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4tQmANTzEAAvaC7xQuts764.jpg" height="50%" width="50%"></div>
+
+
+
+<p>登录的时候，我们将一个UUID作为key，用户信息作为value存储到redis当中，返回给登录方的只有的token（令牌），用户如果需要获取自身的信息，需带着token到后端。这意味着我们需要一个拦截器，拦截是否存在token，token是否真实有效</p>
+<p>拦截器配置</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4u_KAA1_uAAXmkx_u-PQ225.jpg" height="50%" width="50%"></div>
+
+
+
+<p>令牌拦截器</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4vC6AKyN0AAkfBEdKtxM833.jpg" height="50%" width="50%"></div>
+
+<p>用户的服务类</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl-4vJOAEcZ6AA1bUwfFzLo941.jpg" height="50%" width="50%"></div>
+
+
+
+<h2 id="3-UUID碰撞"><a href="#3-UUID碰撞" class="headerlink" title="3.UUID碰撞"></a>3.UUID碰撞</h2><p>UUID单体情况下，确实没问题了，但是如果我们的SSO集群部署，就会出现UUID碰撞的情况，也就是生成的UUID相同，这是我们可以采用推特的雪花算法来替换。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/16/Spring%E5%AE%9A%E6%97%B6%E3%80%81cron%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/" rel="prev" title="Spring定时、cron表达式详解">
+      <i class="fa fa-chevron-left"></i> Spring定时、cron表达式详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E7%AB%AF%E7%82%B9%E7%BD%91%E7%BB%9C%E7%A7%91%E6%8A%80%E7%BC%96%E7%A8%8B%E9%A2%98/" rel="next" title="端点网络科技编程题">
+      端点网络科技编程题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单点登录就是这么简单"><span class="nav-number">1.</span> <span class="nav-text">单点登录就是这么简单</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-number">1.1.</span> <span class="nav-text">1.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-实现"><span class="nav-number">1.2.</span> <span class="nav-text">2.实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-UUID碰撞"><span class="nav-number">1.3.</span> <span class="nav-text">3.UUID碰撞</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

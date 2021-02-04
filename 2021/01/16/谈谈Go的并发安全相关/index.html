@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="谈谈Go的并发安全相关1.临界资源临界资源：指并发环境当中，多个进程&#x2F;线程&#x2F;协程同享的资源 但是临界资源在并发场景当中如果处理不当，就会导致数据不一致问题 2.模拟售票超卖12345678910111213141516171819202122232425262728293031323334package mainimport (	&quot;fmt&quot;	&quot;math&#x2F;rand&quot;	&quot;time&quot;)var ticke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈Go的并发安全相关">
+<meta property="og:url" content="https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="谈谈Go的并发安全相关1.临界资源临界资源：指并发环境当中，多个进程&#x2F;线程&#x2F;协程同享的资源 但是临界资源在并发场景当中如果处理不当，就会导致数据不一致问题 2.模拟售票超卖12345678910111213141516171819202122232425262728293031323334package mainimport (	&quot;fmt&quot;	&quot;math&#x2F;rand&quot;	&quot;time&quot;)var ticke">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/07/rBpUXl_fCsyAWtHeAACn82mJKn8379.png">
+<meta property="article:published_time" content="2021-01-16T13:35:09.844Z">
+<meta property="article:modified_time" content="2021-01-16T13:51:04.699Z">
+<meta property="article:author" content="歪鼻子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.waibizi.com/group1/M00/00/07/rBpUXl_fCsyAWtHeAACn82mJKn8379.png">
+
+<link rel="canonical" href="https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>谈谈Go的并发安全相关 | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          谈谈Go的并发安全相关
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:51:04" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="谈谈Go的并发安全相关"><a href="#谈谈Go的并发安全相关" class="headerlink" title="谈谈Go的并发安全相关"></a>谈谈Go的并发安全相关</h1><h2 id="1-临界资源"><a href="#1-临界资源" class="headerlink" title="1.临界资源"></a>1.临界资源</h2><p>临界资源：指并发环境当中，多个进程/线程/协程同享的资源</p>
+<p>但是临界资源在并发场景当中如果处理不当，就会导致数据不一致问题</p>
+<h2 id="2-模拟售票超卖"><a href="#2-模拟售票超卖" class="headerlink" title="2.模拟售票超卖"></a>2.模拟售票超卖</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"math/rand"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">var</span> ticket = <span class="number">10</span></span><br><span class="line"><span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口A"</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口B"</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口C"</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口D"</span>)</span><br><span class="line">	time.Sleep(<span class="number">5</span>*time.Second)</span><br><span class="line">	fmt.Println(<span class="string">"总共卖出的票数为"</span>,count)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">saleTickets</span><span class="params">(name <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">	rand.Seed(time.Now().UnixNano())</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> ticket &gt;<span class="number">0</span> &#123;</span><br><span class="line">			<span class="comment">// 模拟售票的处理时间</span></span><br><span class="line">			time.Sleep(time.Duration(rand.Intn(<span class="number">1000</span>))*time.Microsecond)</span><br><span class="line">			<span class="comment">// 开始售票</span></span><br><span class="line">			ticket--</span><br><span class="line">			fmt.Println(name,<span class="string">"售出票,剩余票数为："</span>,ticket)</span><br><span class="line">			<span class="comment">// 计算卖出的票总数</span></span><br><span class="line">			count++</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">"没票了！！！"</span>)</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/07/rBpUXl_fCsyAWtHeAACn82mJKn8379.png" height="50%" width="50%"></div>
+
+
+
+ <a id="more"></a>
+
+<h2 id="3-临界资源解决方案"><a href="#3-临界资源解决方案" class="headerlink" title="3.临界资源解决方案"></a>3.临界资源解决方案</h2><p>如同其他编程语言一样，Go语言也提供了锁机制，我们可以通过上锁的方式，某一时间段，只能允许一个gogoutine来访问这个共享数据，当前的goroutine访问完成之后，其他的goroutine才能继续访问</p>
+<p>可以借助sync包下的锁操作，简单看一下demo</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"math/rand"</span></span><br><span class="line">	<span class="string">"sync"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">var</span> ticket = <span class="number">10</span></span><br><span class="line"><span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line"><span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"><span class="comment">// 创建锁头</span></span><br><span class="line"><span class="keyword">var</span> mutex sync.Mutex</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	wg.Add(<span class="number">4</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口A"</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口B"</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口C"</span>)</span><br><span class="line">	<span class="keyword">go</span> saleTickets(<span class="string">"售票窗口D"</span>)</span><br><span class="line">	time.Sleep(<span class="number">5</span>*time.Second)</span><br><span class="line">	fmt.Println(<span class="string">"总共卖出的票数为"</span>,count)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">saleTickets</span><span class="params">(name <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">	<span class="keyword">defer</span> wg.Done()</span><br><span class="line">	rand.Seed(time.Now().UnixNano())</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		mutex.Lock()</span><br><span class="line">		<span class="keyword">if</span> ticket &gt;<span class="number">0</span> &#123;</span><br><span class="line">			<span class="comment">// 模拟售票的处理时间</span></span><br><span class="line">			time.Sleep(time.Duration(rand.Intn(<span class="number">1000</span>))*time.Microsecond)</span><br><span class="line">			<span class="comment">// 开始售票</span></span><br><span class="line">			ticket--</span><br><span class="line">			fmt.Println(name,<span class="string">"售出票,剩余票数为："</span>,ticket)</span><br><span class="line">			<span class="comment">// 计算卖出的票总数</span></span><br><span class="line">			count++</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">"没票了！！！"</span>)</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		mutex.Unlock()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-channel"><a href="#4-channel" class="headerlink" title="4.channel"></a>4.channel</h2><p>但是！在GoLang当中并不推荐采用上锁的方式保证数据的一致性问题，Go的并发编程当中有一句很经典的话：不要以共享内存的方式去通信，而要以通信的方式去共享内存。</p>
+<p>在Go语言当中并不鼓励用锁保护共享状态的方式在不同的goroutine当中分享信息，而是鼓励通过channel将共享状态或共享状态的变化在各个goroutine之间传递，这样同样能像用锁一样保证在同一时间只有一个goroutine访问共享状态</p>
+<p>那接下来我们就进入channel在并发当中的使用吧</p>
+<p>channel直接翻译过来的意思就是通道，即每个goroutine之间的通道，可以让每个goroutine之间相互通信</p>
+<h3 id="channel的声明"><a href="#channel的声明" class="headerlink" title="channel的声明"></a>channel的声明</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明通道</span></span><br><span class="line"><span class="keyword">var</span> 通道名 <span class="keyword">chan</span> 数据类型</span><br><span class="line"><span class="comment">// 创建通道，如果通道为nil，就需要先创建通道</span></span><br><span class="line">通道名 = <span class="built_in">make</span>(<span class="keyword">chan</span> 数据类型)</span><br></pre></td></tr></table></figure>
+
+<p>示例代码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> myChannel <span class="keyword">chan</span> <span class="keyword">int</span></span><br><span class="line">   <span class="keyword">if</span> myChannel == <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"channel当前的是nil的，不能使用，需要先创建"</span>)</span><br><span class="line">      myChannel = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">      fmt.Printf(<span class="string">"数据类型为：%T"</span>,myChannel)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="channel的使用"><a href="#channel的使用" class="headerlink" title="channel的使用"></a>channel的使用</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data := &lt;- myChannel      <span class="comment">//read from channel myChannel</span></span><br><span class="line">myChannel &lt;- data   <span class="comment">//write to channel myChannel</span></span><br></pre></td></tr></table></figure>
+
+<p>在channel上的箭头方向指定数据是发送还是接收</p>
+<p>另外</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v,ok := &lt;- myChannel <span class="comment">//read value and status from myChannel</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="channel的了解"><a href="#channel的了解" class="headerlink" title="channel的了解"></a>channel的了解</h3><p>channel的发送与接收数据，默认是阻塞的，当一个数据be send to channel当中时，在发送语句中被阻塞，直到另外一个goroutine从该通道当中读取数据。相对而言，当试图从channel当中读取数据时，读取是阻塞的，直到另外一个goroutine将数据写入该通道。</p>
+<p>示例代码：</p>
+<p>我们都清楚在GoLand当中，如果main的goroutine执行完毕了，那么子的goroutine就算还未执行完毕也会跟着结束，那么采用channel可以让主的goroutine先阻塞，然后等待子的goroutine执行完毕再执行</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="keyword">var</span> ch1 <span class="keyword">chan</span> <span class="keyword">bool</span></span><br><span class="line">   ch1 = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">bool</span>)</span><br><span class="line">   <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">      <span class="keyword">for</span> i :=<span class="number">0</span>; i &lt; <span class="number">10</span>;i++ &#123;</span><br><span class="line">         fmt.Println(<span class="string">"子的goroutine，i:"</span>,i)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 循环结束之后往通道当中写入输入，表示子的goroutine执行完毕了</span></span><br><span class="line">      ch1 &lt;- <span class="literal">true</span></span><br><span class="line">      fmt.Println(<span class="string">"子的goroutine执行完毕"</span>)</span><br><span class="line">   &#125;()</span><br><span class="line"></span><br><span class="line">   data := &lt;-ch1</span><br><span class="line">   fmt.Println(<span class="string">"主的goroutine接收到值"</span>,data)</span><br><span class="line">   fmt.Println(<span class="string">"主的goroutine执行完毕"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E8%B0%88%E8%B0%88GoLang%E5%BD%93%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" rel="prev" title="谈谈GoLang当中的异常处理">
+      <i class="fa fa-chevron-left"></i> 谈谈GoLang当中的异常处理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#谈谈Go的并发安全相关"><span class="nav-number">1.</span> <span class="nav-text">谈谈Go的并发安全相关</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-临界资源"><span class="nav-number">1.1.</span> <span class="nav-text">1.临界资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-模拟售票超卖"><span class="nav-number">1.2.</span> <span class="nav-text">2.模拟售票超卖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-临界资源解决方案"><span class="nav-number">1.3.</span> <span class="nav-text">3.临界资源解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-channel"><span class="nav-number">1.4.</span> <span class="nav-text">4.channel</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#channel的声明"><span class="nav-number">1.4.1.</span> <span class="nav-text">channel的声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#channel的使用"><span class="nav-number">1.4.2.</span> <span class="nav-text">channel的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#channel的了解"><span class="nav-number">1.4.3.</span> <span class="nav-text">channel的了解</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

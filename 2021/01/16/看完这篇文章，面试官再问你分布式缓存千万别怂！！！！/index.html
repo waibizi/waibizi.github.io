@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="看完这篇文章，面试官再问你分布式缓存千万别怂！！！！1.缓存读写模式缓存的读写模式有三种：Cache Aside(旁路缓存)、Read&#x2F;Write Through(读写穿透)、Write Behind Caching(异步缓存写入)     Cache Aside(旁路缓存)旁路缓存的方案：对于写请求–不管缓存存不存在数据，先更新数据库(db)，然后再由db去驱动缓存(cache)的更新，这种解决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看完这篇文章，面试官再问你分布式缓存千万别怂！！！！">
+<meta property="og:url" content="https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="看完这篇文章，面试官再问你分布式缓存千万别怂！！！！1.缓存读写模式缓存的读写模式有三种：Cache Aside(旁路缓存)、Read&#x2F;Write Through(读写穿透)、Write Behind Caching(异步缓存写入)     Cache Aside(旁路缓存)旁路缓存的方案：对于写请求–不管缓存存不存在数据，先更新数据库(db)，然后再由db去驱动缓存(cache)的更新，这种解决">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl914h2AIPnCAAYLQUn1dpo480.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl917kWAR5f9AADQwVaxKPc592.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl918NqADEl3AADYoapMQpk031.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl918r-AZGMyAADWyGWTgMs412.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl91-XiAB_f2AAf5Kc58Pcw625.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl92Fl2APseGAAIYM0YCSws816.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl92GA-AXRw6AADkZbvP_V4094.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl92oyKAdjQEAAGffiXgUfg095.png">
+<meta property="article:published_time" content="2021-01-16T13:35:09.818Z">
+<meta property="article:modified_time" content="2021-01-16T13:52:59.501Z">
+<meta property="article:author" content="歪鼻子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.waibizi.com/group1/M00/00/06/rBpUXl914h2AIPnCAAYLQUn1dpo480.png">
+
+<link rel="canonical" href="https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>看完这篇文章，面试官再问你分布式缓存千万别怂！！！！ | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          看完这篇文章，面试官再问你分布式缓存千万别怂！！！！
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:52:59" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="看完这篇文章，面试官再问你分布式缓存千万别怂！！！！"><a href="#看完这篇文章，面试官再问你分布式缓存千万别怂！！！！" class="headerlink" title="看完这篇文章，面试官再问你分布式缓存千万别怂！！！！"></a>看完这篇文章，面试官再问你分布式缓存千万别怂！！！！</h1><h2 id="1-缓存读写模式"><a href="#1-缓存读写模式" class="headerlink" title="1.缓存读写模式"></a>1.缓存读写模式</h2><p>缓存的读写模式有三种：Cache Aside(旁路缓存)、Read/Write Through(读写穿透)、Write Behind Caching(异步缓存写入)</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl914h2AIPnCAAYLQUn1dpo480.png" height="80%" width="80%"></div>
+
+
+
+<h3 id="Cache-Aside-旁路缓存"><a href="#Cache-Aside-旁路缓存" class="headerlink" title="Cache Aside(旁路缓存)"></a>Cache Aside(旁路缓存)</h3><p>旁路缓存的方案：对于写请求–不管缓存存不存在数据，先更新数据库(db)，然后再由db去驱动缓存(cache)的更新，这种解决方案对于数据的强一致性会比较有保障；对于读请求–如果读取缓存的时候没有读取到缓存的话，到数据库当中读取然后再回写到缓存当中</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl917kWAR5f9AADQwVaxKPc592.png" height="60%" width="60%"></div>
+
+
+
+<h3 id="Read-Write-Through-读写穿透"><a href="#Read-Write-Through-读写穿透" class="headerlink" title="Read/Write Through(读写穿透)"></a>Read/Write Through(读写穿透)</h3> <a id="more"></a>
+
+<p>读写穿透的方案：对于写请求–如果在缓存不存在的情况下，只更新db，如果缓存存在的情况下，先更新缓存，然后再更新db；对于读请求–如果命中缓存直接返回，如果不命中缓存，先到数据库当中查询，然后更新缓存，再响应返回；</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl918NqADEl3AADYoapMQpk031.png" height="60%" width="60%"></div>
+
+
+
+<h3 id="Write-Behind-Caching-异步缓存写入"><a href="#Write-Behind-Caching-异步缓存写入" class="headerlink" title="Write Behind Caching(异步缓存写入)"></a>Write Behind Caching(异步缓存写入)</h3><p>异步缓存写入的方案与读写穿透的方案不同的是，读写穿透是采用db与cache同步更新的方式，而异步缓存写入顾名思义就是采用异步的方式，并且是批量异步。对于写请求–如果缓存当中存在的话，只更新缓存，而db是等待一定量的缓存之后，再异步更新；这种方案对于数据一致性如果要求不是太高的情况，是非常高效的，因为在点赞这种场景下的话，如果一次点赞就同步更新一次db的话，磁盘的IO吞吐肯定是一个非常高的值;</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl918r-AZGMyAADWyGWTgMs412.png" height="60%" width="60%"></div>
+
+
+
+<h2 id="2-缓存分类"><a href="#2-缓存分类" class="headerlink" title="2.缓存分类"></a>2.缓存分类</h2><p>前面介绍了缓存的基本思想、优势、代价以及读写模式，接下来一起看下互联网企业常用的缓存有哪些分类。</p>
+<h3 id="按宿主层次分类"><a href="#按宿主层次分类" class="headerlink" title="按宿主层次分类"></a>按宿主层次分类</h3><p>按宿主层次分类的话，缓存一般可以分为本地 Cache、进程间 Cache 和远程 Cache。</p>
+<ul>
+<li>本地 Cache 是指业务进程内的缓存，这类缓存由于在业务系统进程内，所以读写性能超高且无任何网络开销，但不足是会随着业务系统重启而丢失。</li>
+<li>进程间 Cache 是本机独立运行的缓存，这类缓存读写性能较高，不会随着业务系统重启丢数据，并且可以大幅减少网络开销，但不足是业务系统和缓存都在相同宿主机，运维复杂，且存在资源竞争。</li>
+<li>远程 Cache 是指跨机器部署的缓存，这类缓存因为独立设备部署，容量大且易扩展，在互联网企业使用最广泛。不过远程缓存需要跨机访问，在高读写压力下，带宽容易成为瓶颈。</li>
+</ul>
+<p>（在这里插一下，UP主在上一个微服务项目当中，带宽问题对于服务之间的性能影响实在是太大了，如果你正在涉及跨机器的分布式相关业务，那么对于带宽问题这个问题应该先着手考虑）</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl91-XiAB_f2AAf5Kc58Pcw625.png" height="80%" width="80%"></div>
+
+
+
+<p>进程内缓存：我们有着许许多多的方式去实现它，在Java当中，采用Map都可以直接构建进程缓存，例如Spring当中的Bean的相关设计就运用了大量的Map去作为缓存，还有Mybatis的一二级缓存都是采用Map去缓存的、当然缓存也有第三方支持，例如Google的Guava或者是Ehcache都是十分优秀的进程内缓存支持</p>
+<p>进程间的缓存：进程间的缓存，其实进程间的缓存跟远程网络的缓存的使用是差不多的，利用第三方的组件，例如Memcached、Redis都可以实现，而对于远程缓存，我们只是将这些缓存中间件另外部署到另外一台主机上而已</p>
+<h3 id="按存储介质分类"><a href="#按存储介质分类" class="headerlink" title="按存储介质分类"></a>按存储介质分类</h3><p>还有一种常见的分类方式是按存储介质来分，这样可以分为内存型缓存和持久化型缓存。</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl92Fl2APseGAAIYM0YCSws816.png" height="80%" width="80%"></div>
+
+<ul>
+<li>内存型缓存将数据存储在内存，读写性能很高，但缓存系统重启或 Crash 后，内存数据会丢失。</li>
+<li>持久化型缓存将数据存储到 SSD/Fusion-IO 硬盘中，相同成本下，这种缓存的容量会比内存型缓存大 1 个数量级以上，而且数据会持久化落地，重启不丢失，但读写性能相对低 1～2 个数量级。Memcached 是典型的内存型缓存，而 Pika 以及其他基于 RocksDB 开发的缓存组件等则属于持久化型缓存。</li>
+</ul>
+<h2 id="3-缓存七大经典问题"><a href="#3-缓存七大经典问题" class="headerlink" title="3.缓存七大经典问题"></a>3.缓存七大经典问题</h2><div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl92GA-AXRw6AADkZbvP_V4094.png" height="80%" width="80%"></div>
+
+
+
+<h3 id="缓存失效‘"><a href="#缓存失效‘" class="headerlink" title="缓存失效‘"></a>缓存失效‘</h3><h4 id="问题描述：大量的key同时过期，访问cache时没有命中，穿透到db当中，查询都到db当中进行查询，db的压力激增，慢查询剧增"><a href="#问题描述：大量的key同时过期，访问cache时没有命中，穿透到db当中，查询都到db当中进行查询，db的压力激增，慢查询剧增" class="headerlink" title="问题描述：大量的key同时过期，访问cache时没有命中，穿透到db当中，查询都到db当中进行查询，db的压力激增，慢查询剧增"></a>问题描述：大量的key同时过期，访问cache时没有命中，穿透到db当中，查询都到db当中进行查询，db的压力激增，慢查询剧增</h4><h4 id="原因分析：我们在设置过期时间的时候，往往都是根据业务的需求，设置固定的过期时间，一般情况下，缓存都是逐步写入的，但在一些特定的场景下-如进行缓存预热的场景-，会有大批量的db数据同步到cache当中，这时，缓存当中便存在大量的过期时间相同的key，这些key如果同时失效的情况下，刚好有大规模的请求到来，就会穿透到db当中进行查询。"><a href="#原因分析：我们在设置过期时间的时候，往往都是根据业务的需求，设置固定的过期时间，一般情况下，缓存都是逐步写入的，但在一些特定的场景下-如进行缓存预热的场景-，会有大批量的db数据同步到cache当中，这时，缓存当中便存在大量的过期时间相同的key，这些key如果同时失效的情况下，刚好有大规模的请求到来，就会穿透到db当中进行查询。" class="headerlink" title="原因分析：我们在设置过期时间的时候，往往都是根据业务的需求，设置固定的过期时间，一般情况下，缓存都是逐步写入的，但在一些特定的场景下(如进行缓存预热的场景)，会有大批量的db数据同步到cache当中，这时，缓存当中便存在大量的过期时间相同的key，这些key如果同时失效的情况下，刚好有大规模的请求到来，就会穿透到db当中进行查询。"></a>原因分析：我们在设置过期时间的时候，往往都是根据业务的需求，设置固定的过期时间，一般情况下，缓存都是逐步写入的，但在一些特定的场景下(如进行缓存预热的场景)，会有大批量的db数据同步到cache当中，这时，缓存当中便存在大量的过期时间相同的key，这些key如果同时失效的情况下，刚好有大规模的请求到来，就会穿透到db当中进行查询。</h4><h4 id="解决方案：既然是因为大批量的数据过期时间一致，那我们的解决方案也是在这着手：设计缓存的过期时间时，使用公式：过期时间-baes-时间-随机时间。即相同业务数据写缓存时，在基础过期时间之上，再加一个随机的过期时间，让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对-DB-造成过大压力"><a href="#解决方案：既然是因为大批量的数据过期时间一致，那我们的解决方案也是在这着手：设计缓存的过期时间时，使用公式：过期时间-baes-时间-随机时间。即相同业务数据写缓存时，在基础过期时间之上，再加一个随机的过期时间，让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对-DB-造成过大压力" class="headerlink" title="解决方案：既然是因为大批量的数据过期时间一致，那我们的解决方案也是在这着手：设计缓存的过期时间时，使用公式：过期时间=baes 时间+随机时间。即相同业务数据写缓存时，在基础过期时间之上，再加一个随机的过期时间，让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对 DB 造成过大压力"></a>解决方案：既然是因为大批量的数据过期时间一致，那我们的解决方案也是在这着手：设计缓存的过期时间时，使用公式：过期时间=baes 时间+随机时间。即相同业务数据写缓存时，在基础过期时间之上，再加一个随机的过期时间，让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对 DB 造成过大压力</h4><h3 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h3><h4 id="问题描述：缓存穿透的问题比较有意思一些，我们一般的思路是先访问缓存，如果缓存没有，我们就去数据库加载然后回写到缓存当中，但是如果查缓存的时候，这个key既不在缓存，也不在数据库，也就是说这个key压根就不存在，而用户可以采用肉鸡不断去轮询这个有漏洞的接口，这样就会持续访问db，去db当中查找数据，如果请求量大，也会导致IO的吞吐激增，导致db慢查询。"><a href="#问题描述：缓存穿透的问题比较有意思一些，我们一般的思路是先访问缓存，如果缓存没有，我们就去数据库加载然后回写到缓存当中，但是如果查缓存的时候，这个key既不在缓存，也不在数据库，也就是说这个key压根就不存在，而用户可以采用肉鸡不断去轮询这个有漏洞的接口，这样就会持续访问db，去db当中查找数据，如果请求量大，也会导致IO的吞吐激增，导致db慢查询。" class="headerlink" title="问题描述：缓存穿透的问题比较有意思一些，我们一般的思路是先访问缓存，如果缓存没有，我们就去数据库加载然后回写到缓存当中，但是如果查缓存的时候，这个key既不在缓存，也不在数据库，也就是说这个key压根就不存在，而用户可以采用肉鸡不断去轮询这个有漏洞的接口，这样就会持续访问db，去db当中查找数据，如果请求量大，也会导致IO的吞吐激增，导致db慢查询。"></a>问题描述：缓存穿透的问题比较有意思一些，我们一般的思路是先访问缓存，如果缓存没有，我们就去数据库加载然后回写到缓存当中，但是如果查缓存的时候，这个key既不在缓存，也不在数据库，也就是说这个key压根就不存在，而用户可以采用肉鸡不断去轮询这个有漏洞的接口，这样就会持续访问db，去db当中查找数据，如果请求量大，也会导致IO的吞吐激增，导致db慢查询。</h4><h4 id="原因分析：缓存穿透问题主要是我们在设计缓存的时候，都是考虑正常查缓存的思维逻辑，而没有去思考像以上的这种特殊情况。"><a href="#原因分析：缓存穿透问题主要是我们在设计缓存的时候，都是考虑正常查缓存的思维逻辑，而没有去思考像以上的这种特殊情况。" class="headerlink" title="原因分析：缓存穿透问题主要是我们在设计缓存的时候，都是考虑正常查缓存的思维逻辑，而没有去思考像以上的这种特殊情况。"></a>原因分析：缓存穿透问题主要是我们在设计缓存的时候，都是考虑正常查缓存的思维逻辑，而没有去思考像以上的这种特殊情况。</h4><h4 id="解决方案：第一种解决方案是我们在db当中查询出来的是NULL值时，仍然保存再cache当中，只不过这个NULL我们可以采用一些特殊的值存储，这样下次访问cache的时候，只会返回这个特殊值，而不会访问db，进而保护了db；第二种解决方案是采用布隆过滤器，也就是缓存的过滤器，可以通过布隆过滤器判断这个key是否真的存在"><a href="#解决方案：第一种解决方案是我们在db当中查询出来的是NULL值时，仍然保存再cache当中，只不过这个NULL我们可以采用一些特殊的值存储，这样下次访问cache的时候，只会返回这个特殊值，而不会访问db，进而保护了db；第二种解决方案是采用布隆过滤器，也就是缓存的过滤器，可以通过布隆过滤器判断这个key是否真的存在" class="headerlink" title="解决方案：第一种解决方案是我们在db当中查询出来的是NULL值时，仍然保存再cache当中，只不过这个NULL我们可以采用一些特殊的值存储，这样下次访问cache的时候，只会返回这个特殊值，而不会访问db，进而保护了db；第二种解决方案是采用布隆过滤器，也就是缓存的过滤器，可以通过布隆过滤器判断这个key是否真的存在"></a>解决方案：第一种解决方案是我们在db当中查询出来的是NULL值时，仍然保存再cache当中，只不过这个NULL我们可以采用一些特殊的值存储，这样下次访问cache的时候，只会返回这个特殊值，而不会访问db，进而保护了db；第二种解决方案是采用布隆过滤器，也就是缓存的过滤器，可以通过布隆过滤器判断这个key是否真的存在</h4><h4 id="避坑"><a href="#避坑" class="headerlink" title="避坑"></a>避坑</h4><ul>
+<li>对于方案一，如果特殊访客持续访问大量的不存在的 key，这些 key 即便只存一个简单的默认值，也会占用大量的缓存空间，导致正常 key 的命中率下降。所以进一步的改进措施是，对这些不存在的 key 只存较短的时间，让它们尽快过期；或者将这些不存在的 key 存在一个独立的公共缓存，从缓存查找时，先查正常的缓存组件，如果 miss，则查一下公共的非法 key 的缓存，如果后者命中，直接返回，否则穿透 DB，如果查出来是空，则回种到非法 key 缓存，否则回种到正常缓存。</li>
+<li>对于方案二，BloomFilter 要缓存全量的 key，这就要求全量的 key 数量不大，10亿 条数据以内最佳，因为 10亿 条数据大概要占用 1.2GB 的内存。也可以用 BloomFilter 缓存非法 key，每次发现一个 key 是不存在的非法 key，就记录到 BloomFilter 中，这种记录方案，会导致 BloomFilter 存储的 key 持续高速增长，为了避免记录 key 太多而导致误判率增大，需要定期清零处理。</li>
+</ul>
+<h3 id="知识扩展-布隆过滤器（BloomFilter-）"><a href="#知识扩展-布隆过滤器（BloomFilter-）" class="headerlink" title="知识扩展-布隆过滤器（BloomFilter ）"></a>知识扩展-布隆过滤器（BloomFilter ）</h3><p>BloomFilter 是一个非常有意思的数据结构，不仅仅可以挡住非法 key 攻击，还可以低成本、高性能地对海量数据进行判断</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/06/rBpUXl92oyKAdjQEAAGffiXgUfg095.png" height="80%" width="80%"></div>
+
+<p>BloomFilter 的目的是检测一个元素是否存在于一个集合内。它的原理，是用 bit 数据组来表示一个集合，对一个 key 进行多次不同的 Hash 检测，如果所有 Hash 对应的 bit 位都是 1，则表明 key 非常大概率存在，平均单记录占用 1.2 字节即可达到 99%，只要有一次 Hash 对应的 bit 位是 0，就说明这个 key 肯定不存在于这个集合内。</p>
+<p>BloomFilter 的算法是，首先分配一块内存空间做 bit 数组，数组的 bit 位初始值全部设为 0，加入元素时，采用 k 个相互独立的 Hash 函数计算，然后将元素 Hash 映射的 K 个位置全部设置为 1。检测 key 时，仍然用这 k 个 Hash 函数计算出 k 个位置，如果位置全部为 1，则表明 key 存在，否则不存在。</p>
+<p>BloomFilter 的优势是，全内存操作，性能很高。另外空间效率非常高，要达到 1% 的误判率，平均单条记录占用 1.2 字节即可。而且，平均单条记录每增加 0.6 字节，还可让误判率继续变为之前的 1/10，即平均单条记录占用 1.8 字节，误判率可以达到 1/1000；平均单条记录占用 2.4 字节，误判率可以到 1/10000，以此类推。这里的误判率是指，BloomFilter 判断某个 key 存在，但它实际不存在的概率，因为它存的是 key 的 Hash 值，而非 key 的值，所以有概率存在这样的 key，它们内容不同，但多次 Hash 后的 Hash 值都相同。对于 BloomFilter 判断不存在的 key ，则是 100% 不存在的，反证法，如果这个 key 存在，那它每次 Hash 后对应的 Hash 值位置肯定是 1，而不会是 0。</p>
+<h3 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h3><h4 id="问题描述：系统运行过程中，缓存雪崩是一个非常严重的问题。缓存雪崩是指部分缓存节点不可用，导致整个缓存体系甚至甚至服务系统不可用的情况。缓存雪崩按照缓存是否-rehash（即是否漂移）分两种情况："><a href="#问题描述：系统运行过程中，缓存雪崩是一个非常严重的问题。缓存雪崩是指部分缓存节点不可用，导致整个缓存体系甚至甚至服务系统不可用的情况。缓存雪崩按照缓存是否-rehash（即是否漂移）分两种情况：" class="headerlink" title="问题描述：系统运行过程中，缓存雪崩是一个非常严重的问题。缓存雪崩是指部分缓存节点不可用，导致整个缓存体系甚至甚至服务系统不可用的情况。缓存雪崩按照缓存是否 rehash（即是否漂移）分两种情况："></a>问题描述：系统运行过程中，缓存雪崩是一个非常严重的问题。缓存雪崩是指部分缓存节点不可用，导致整个缓存体系甚至甚至服务系统不可用的情况。缓存雪崩按照缓存是否 rehash（即是否漂移）分两种情况：</h4><pre><code>- 缓存不支持 rehash 导致的系统雪崩不可用
+
+- 缓存支持 rehash 导致的缓存雪崩不可用</code></pre><h4 id="原因分析：1-缓存不支持rehash的缓存雪崩问题，根据缓存读写模式可知，如果缓存不命中，会到db当中，请求，而db所能承受的请求量远远比不上缓存，请求量过大，就很容易造成-DB-过载，大量慢查询，最终阻塞甚至-Crash，从而导致服务异常。2-缓存支持rehash，设计缓存的时候，大部分人采用缓存的分布模式都是采用一致性的hash分布方式，在部分节点异常的情况下，采用rehash的策略，即把异常节点请求平均分散到其他缓存节点。在一般情况下，一致性-Hash-分布-rehash-策略可以很好得运行，但在较大的流量洪峰到临之时，如果大流量-key-比较集中，正好在某-1～2-个缓存节点，很容易将这些缓存节点的内存、网卡过载，缓存节点异常-Crash，然后这些异常节点下线，这些大流量-key-请求又被-rehash-到其他缓存节点，进而导致其他缓存节点也被过载-Crash，缓存异常持续扩散，最终导致整个缓存体系异常，无法对外提供服务。"><a href="#原因分析：1-缓存不支持rehash的缓存雪崩问题，根据缓存读写模式可知，如果缓存不命中，会到db当中，请求，而db所能承受的请求量远远比不上缓存，请求量过大，就很容易造成-DB-过载，大量慢查询，最终阻塞甚至-Crash，从而导致服务异常。2-缓存支持rehash，设计缓存的时候，大部分人采用缓存的分布模式都是采用一致性的hash分布方式，在部分节点异常的情况下，采用rehash的策略，即把异常节点请求平均分散到其他缓存节点。在一般情况下，一致性-Hash-分布-rehash-策略可以很好得运行，但在较大的流量洪峰到临之时，如果大流量-key-比较集中，正好在某-1～2-个缓存节点，很容易将这些缓存节点的内存、网卡过载，缓存节点异常-Crash，然后这些异常节点下线，这些大流量-key-请求又被-rehash-到其他缓存节点，进而导致其他缓存节点也被过载-Crash，缓存异常持续扩散，最终导致整个缓存体系异常，无法对外提供服务。" class="headerlink" title="原因分析：1.缓存不支持rehash的缓存雪崩问题，根据缓存读写模式可知，如果缓存不命中，会到db当中，请求，而db所能承受的请求量远远比不上缓存，请求量过大，就很容易造成 DB 过载，大量慢查询，最终阻塞甚至 Crash，从而导致服务异常。2.缓存支持rehash，设计缓存的时候，大部分人采用缓存的分布模式都是采用一致性的hash分布方式，在部分节点异常的情况下，采用rehash的策略，即把异常节点请求平均分散到其他缓存节点。在一般情况下，一致性 Hash 分布+rehash 策略可以很好得运行，但在较大的流量洪峰到临之时，如果大流量 key 比较集中，正好在某 1～2 个缓存节点，很容易将这些缓存节点的内存、网卡过载，缓存节点异常 Crash，然后这些异常节点下线，这些大流量 key 请求又被 rehash 到其他缓存节点，进而导致其他缓存节点也被过载 Crash，缓存异常持续扩散，最终导致整个缓存体系异常，无法对外提供服务。"></a>原因分析：1.缓存不支持rehash的缓存雪崩问题，根据缓存读写模式可知，如果缓存不命中，会到db当中，请求，而db所能承受的请求量远远比不上缓存，请求量过大，就很容易造成 DB 过载，大量慢查询，最终阻塞甚至 Crash，从而导致服务异常。2.缓存支持rehash，设计缓存的时候，大部分人采用缓存的分布模式都是采用一致性的hash分布方式，在部分节点异常的情况下，采用rehash的策略，即把异常节点请求平均分散到其他缓存节点。在一般情况下，一致性 Hash 分布+rehash 策略可以很好得运行，但在较大的流量洪峰到临之时，如果大流量 key 比较集中，正好在某 1～2 个缓存节点，很容易将这些缓存节点的内存、网卡过载，缓存节点异常 Crash，然后这些异常节点下线，这些大流量 key 请求又被 rehash 到其他缓存节点，进而导致其他缓存节点也被过载 Crash，缓存异常持续扩散，最终导致整个缓存体系异常，无法对外提供服务。</h4><h4 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h4><h5 id="方案一，对业务-DB-的访问增加读写开关，当发现-DB-请求变慢、阻塞，慢请求超过阀值时，就会关闭读开关，部分或所有读-DB-的请求进行-failfast-立即返回，待-DB-恢复后再打开读开关。"><a href="#方案一，对业务-DB-的访问增加读写开关，当发现-DB-请求变慢、阻塞，慢请求超过阀值时，就会关闭读开关，部分或所有读-DB-的请求进行-failfast-立即返回，待-DB-恢复后再打开读开关。" class="headerlink" title="方案一，对业务 DB 的访问增加读写开关，当发现 DB 请求变慢、阻塞，慢请求超过阀值时，就会关闭读开关，部分或所有读 DB 的请求进行 failfast 立即返回，待 DB 恢复后再打开读开关。"></a>方案一，对业务 DB 的访问增加读写开关，当发现 DB 请求变慢、阻塞，慢请求超过阀值时，就会关闭读开关，部分或所有读 DB 的请求进行 failfast 立即返回，待 DB 恢复后再打开读开关。</h5><h5 id="方案二，对缓存增加多个副本，缓存异常或请求-miss-后，再读取其他缓存副本，而且多个缓存副本尽量部署在不同机架，从而确保在任何情况下，缓存系统都会正常对外提供服务。"><a href="#方案二，对缓存增加多个副本，缓存异常或请求-miss-后，再读取其他缓存副本，而且多个缓存副本尽量部署在不同机架，从而确保在任何情况下，缓存系统都会正常对外提供服务。" class="headerlink" title="方案二，对缓存增加多个副本，缓存异常或请求 miss 后，再读取其他缓存副本，而且多个缓存副本尽量部署在不同机架，从而确保在任何情况下，缓存系统都会正常对外提供服务。"></a>方案二，对缓存增加多个副本，缓存异常或请求 miss 后，再读取其他缓存副本，而且多个缓存副本尽量部署在不同机架，从而确保在任何情况下，缓存系统都会正常对外提供服务。</h5><h5 id="方案三，对缓存体系进行实时监控，当请求访问的慢速比超过阀值时，及时报警，通过机器替换、服务替换进行及时恢复；也可以通过各种自动故障转移策略，自动关闭异常接口、停止边缘服务、停止部分非核心功能措施，确保在极端场景下，核心功能的正常运行。"><a href="#方案三，对缓存体系进行实时监控，当请求访问的慢速比超过阀值时，及时报警，通过机器替换、服务替换进行及时恢复；也可以通过各种自动故障转移策略，自动关闭异常接口、停止边缘服务、停止部分非核心功能措施，确保在极端场景下，核心功能的正常运行。" class="headerlink" title="方案三，对缓存体系进行实时监控，当请求访问的慢速比超过阀值时，及时报警，通过机器替换、服务替换进行及时恢复；也可以通过各种自动故障转移策略，自动关闭异常接口、停止边缘服务、停止部分非核心功能措施，确保在极端场景下，核心功能的正常运行。"></a>方案三，对缓存体系进行实时监控，当请求访问的慢速比超过阀值时，及时报警，通过机器替换、服务替换进行及时恢复；也可以通过各种自动故障转移策略，自动关闭异常接口、停止边缘服务、停止部分非核心功能措施，确保在极端场景下，核心功能的正常运行。</h5><h3 id="数据不一致"><a href="#数据不一致" class="headerlink" title="数据不一致"></a>数据不一致</h3><h4 id="问题描述：七大缓存经典问题的第四个问题是数据不一致。同一份数据，可能会同时存在-DB-和缓存之中。那就有可能发生，DB-和缓存的数据不一致。如果缓存有多个副本，多个缓存副本里的数据也可能会发生不一致现象。"><a href="#问题描述：七大缓存经典问题的第四个问题是数据不一致。同一份数据，可能会同时存在-DB-和缓存之中。那就有可能发生，DB-和缓存的数据不一致。如果缓存有多个副本，多个缓存副本里的数据也可能会发生不一致现象。" class="headerlink" title="问题描述：七大缓存经典问题的第四个问题是数据不一致。同一份数据，可能会同时存在 DB 和缓存之中。那就有可能发生，DB 和缓存的数据不一致。如果缓存有多个副本，多个缓存副本里的数据也可能会发生不一致现象。"></a>问题描述：七大缓存经典问题的第四个问题是数据不一致。同一份数据，可能会同时存在 DB 和缓存之中。那就有可能发生，DB 和缓存的数据不一致。如果缓存有多个副本，多个缓存副本里的数据也可能会发生不一致现象。</h4><h4 id="原因分析：不一致的问题大多跟缓存更新异常有关。比如更新-DB-后，写缓存失败，从而导致缓存中存的是老数据。另外，如果系统采用一致性-Hash-分布，同时采用-rehash-自动漂移策略，在节点多次上下线之后，也会产生脏数据。缓存有多个副本时，更新某个副本失败，也会导致这个副本的数据是老数据。"><a href="#原因分析：不一致的问题大多跟缓存更新异常有关。比如更新-DB-后，写缓存失败，从而导致缓存中存的是老数据。另外，如果系统采用一致性-Hash-分布，同时采用-rehash-自动漂移策略，在节点多次上下线之后，也会产生脏数据。缓存有多个副本时，更新某个副本失败，也会导致这个副本的数据是老数据。" class="headerlink" title="原因分析：不一致的问题大多跟缓存更新异常有关。比如更新 DB 后，写缓存失败，从而导致缓存中存的是老数据。另外，如果系统采用一致性 Hash 分布，同时采用 rehash 自动漂移策略，在节点多次上下线之后，也会产生脏数据。缓存有多个副本时，更新某个副本失败，也会导致这个副本的数据是老数据。"></a>原因分析：不一致的问题大多跟缓存更新异常有关。比如更新 DB 后，写缓存失败，从而导致缓存中存的是老数据。另外，如果系统采用一致性 Hash 分布，同时采用 rehash 自动漂移策略，在节点多次上下线之后，也会产生脏数据。缓存有多个副本时，更新某个副本失败，也会导致这个副本的数据是老数据。</h4><h4 id="解决方案：-1"><a href="#解决方案：-1" class="headerlink" title="解决方案："></a>解决方案：</h4><h5 id="方案一：cache-更新失败后，可以进行重试，如果重试失败，则将失败的-key-写入队列机服务，待缓存访问恢复后，将这些-key-从缓存删除。这些-key-在再次被查询时，重新从-DB-加载，从而保证数据的一致性。"><a href="#方案一：cache-更新失败后，可以进行重试，如果重试失败，则将失败的-key-写入队列机服务，待缓存访问恢复后，将这些-key-从缓存删除。这些-key-在再次被查询时，重新从-DB-加载，从而保证数据的一致性。" class="headerlink" title="方案一：cache 更新失败后，可以进行重试，如果重试失败，则将失败的 key 写入队列机服务，待缓存访问恢复后，将这些 key 从缓存删除。这些 key 在再次被查询时，重新从 DB 加载，从而保证数据的一致性。"></a>方案一：cache 更新失败后，可以进行重试，如果重试失败，则将失败的 key 写入队列机服务，待缓存访问恢复后，将这些 key 从缓存删除。这些 key 在再次被查询时，重新从 DB 加载，从而保证数据的一致性。</h5><h5 id="方案二：缓存时间适当调短，让缓存数据及早过期后，然后从-DB-重新加载，确保数据的最终一致性。"><a href="#方案二：缓存时间适当调短，让缓存数据及早过期后，然后从-DB-重新加载，确保数据的最终一致性。" class="headerlink" title="方案二：缓存时间适当调短，让缓存数据及早过期后，然后从 DB 重新加载，确保数据的最终一致性。"></a>方案二：缓存时间适当调短，让缓存数据及早过期后，然后从 DB 重新加载，确保数据的最终一致性。</h5><h5 id="方案三：不采用-rehash-漂移策略，而采用缓存分层策略，尽量避免脏数据产生。"><a href="#方案三：不采用-rehash-漂移策略，而采用缓存分层策略，尽量避免脏数据产生。" class="headerlink" title="方案三：不采用 rehash 漂移策略，而采用缓存分层策略，尽量避免脏数据产生。"></a>方案三：不采用 rehash 漂移策略，而采用缓存分层策略，尽量避免脏数据产生。</h5><h3 id="数据并发竞争"><a href="#数据并发竞争" class="headerlink" title="数据并发竞争"></a>数据并发竞争</h3><h5 id="问题描述：互联网系统，线上流量较大，缓存访问中很容易出现数据并发竞争的现象。数据并发竞争，是指在高并发访问场景，一旦缓存访问没有找到数据，大量请求就会并发查询-DB，导致-DB-压力大增的现象。"><a href="#问题描述：互联网系统，线上流量较大，缓存访问中很容易出现数据并发竞争的现象。数据并发竞争，是指在高并发访问场景，一旦缓存访问没有找到数据，大量请求就会并发查询-DB，导致-DB-压力大增的现象。" class="headerlink" title="问题描述：互联网系统，线上流量较大，缓存访问中很容易出现数据并发竞争的现象。数据并发竞争，是指在高并发访问场景，一旦缓存访问没有找到数据，大量请求就会并发查询 DB，导致 DB 压力大增的现象。"></a>问题描述：互联网系统，线上流量较大，缓存访问中很容易出现数据并发竞争的现象。数据并发竞争，是指在高并发访问场景，一旦缓存访问没有找到数据，大量请求就会并发查询 DB，导致 DB 压力大增的现象。</h5><h5 id="原因分析：数据并发竞争，主要是由于多个进程-线程中，有大量并发请求获取相同的数据，而这个数据-key-因为正好过期、被剔除等各种原因在缓存中不存在，这些进程-线程之间没有任何协调，然后一起并发查询-DB，请求那个相同的-key，最终导致-DB-压力大增。"><a href="#原因分析：数据并发竞争，主要是由于多个进程-线程中，有大量并发请求获取相同的数据，而这个数据-key-因为正好过期、被剔除等各种原因在缓存中不存在，这些进程-线程之间没有任何协调，然后一起并发查询-DB，请求那个相同的-key，最终导致-DB-压力大增。" class="headerlink" title="原因分析：数据并发竞争，主要是由于多个进程/线程中，有大量并发请求获取相同的数据，而这个数据 key 因为正好过期、被剔除等各种原因在缓存中不存在，这些进程/线程之间没有任何协调，然后一起并发查询 DB，请求那个相同的 key，最终导致 DB 压力大增。"></a>原因分析：数据并发竞争，主要是由于多个进程/线程中，有大量并发请求获取相同的数据，而这个数据 key 因为正好过期、被剔除等各种原因在缓存中不存在，这些进程/线程之间没有任何协调，然后一起并发查询 DB，请求那个相同的 key，最终导致 DB 压力大增。</h5><h4 id="解决方案：-2"><a href="#解决方案：-2" class="headerlink" title="解决方案："></a>解决方案：</h4><h5 id="方案一：是使用全局锁。如下图所示，即当缓存请求-miss-后，先尝试加全局锁，只有加全局锁成功的线程，才可以到-DB-去加载数据。其他进程-线程在读取缓存数据-miss-时，如果发现这个-key-有全局锁，就进行等待，待之前的线程将数据从-DB-回种到缓存后，再从缓存获取。"><a href="#方案一：是使用全局锁。如下图所示，即当缓存请求-miss-后，先尝试加全局锁，只有加全局锁成功的线程，才可以到-DB-去加载数据。其他进程-线程在读取缓存数据-miss-时，如果发现这个-key-有全局锁，就进行等待，待之前的线程将数据从-DB-回种到缓存后，再从缓存获取。" class="headerlink" title="方案一：是使用全局锁。如下图所示，即当缓存请求 miss 后，先尝试加全局锁，只有加全局锁成功的线程，才可以到 DB 去加载数据。其他进程/线程在读取缓存数据 miss 时，如果发现这个 key 有全局锁，就进行等待，待之前的线程将数据从 DB 回种到缓存后，再从缓存获取。"></a>方案一：是使用全局锁。如下图所示，即当缓存请求 miss 后，先尝试加全局锁，只有加全局锁成功的线程，才可以到 DB 去加载数据。其他进程/线程在读取缓存数据 miss 时，如果发现这个 key 有全局锁，就进行等待，待之前的线程将数据从 DB 回种到缓存后，再从缓存获取。</h5><h5 id="方案二：对缓存数据保持多个备份，即便其中一个备份中的数据过期或被剔除了，还可以访问其他备份，从而减少数据并发竞争的情况"><a href="#方案二：对缓存数据保持多个备份，即便其中一个备份中的数据过期或被剔除了，还可以访问其他备份，从而减少数据并发竞争的情况" class="headerlink" title="方案二：对缓存数据保持多个备份，即便其中一个备份中的数据过期或被剔除了，还可以访问其他备份，从而减少数据并发竞争的情况"></a>方案二：对缓存数据保持多个备份，即便其中一个备份中的数据过期或被剔除了，还可以访问其他备份，从而减少数据并发竞争的情况</h5>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0Template%20Method%20Pattern%E5%92%B1%E4%B8%8D%E6%80%82%E4%BB%96/" rel="prev" title="看完这篇文章，面试官再问你Template Method Pattern咱不怂他">
+      <i class="fa fa-chevron-left"></i> 看完这篇文章，面试官再问你Template Method Pattern咱不怂他
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E6%9F%90%E5%8E%82%E4%B8%80%E9%81%932sum%E7%9A%84%E6%9C%BA%E8%AF%95%E9%A2%98,%E6%88%91%E7%AB%9F%E7%84%B6%E7%9B%B4%E6%8E%A5%E8%A2%AB%E6%B7%98%E6%B1%B0%E4%BA%86/" rel="next" title="某厂一道2sum的机试题,我竟然直接被淘汰了">
+      某厂一道2sum的机试题,我竟然直接被淘汰了 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#看完这篇文章，面试官再问你分布式缓存千万别怂！！！！"><span class="nav-number">1.</span> <span class="nav-text">看完这篇文章，面试官再问你分布式缓存千万别怂！！！！</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-缓存读写模式"><span class="nav-number">1.1.</span> <span class="nav-text">1.缓存读写模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache-Aside-旁路缓存"><span class="nav-number">1.1.1.</span> <span class="nav-text">Cache Aside(旁路缓存)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-Write-Through-读写穿透"><span class="nav-number">1.1.2.</span> <span class="nav-text">Read&#x2F;Write Through(读写穿透)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Write-Behind-Caching-异步缓存写入"><span class="nav-number">1.1.3.</span> <span class="nav-text">Write Behind Caching(异步缓存写入)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-缓存分类"><span class="nav-number">1.2.</span> <span class="nav-text">2.缓存分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#按宿主层次分类"><span class="nav-number">1.2.1.</span> <span class="nav-text">按宿主层次分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按存储介质分类"><span class="nav-number">1.2.2.</span> <span class="nav-text">按存储介质分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-缓存七大经典问题"><span class="nav-number">1.3.</span> <span class="nav-text">3.缓存七大经典问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存失效‘"><span class="nav-number">1.3.1.</span> <span class="nav-text">缓存失效‘</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题描述：大量的key同时过期，访问cache时没有命中，穿透到db当中，查询都到db当中进行查询，db的压力激增，慢查询剧增"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">问题描述：大量的key同时过期，访问cache时没有命中，穿透到db当中，查询都到db当中进行查询，db的压力激增，慢查询剧增</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原因分析：我们在设置过期时间的时候，往往都是根据业务的需求，设置固定的过期时间，一般情况下，缓存都是逐步写入的，但在一些特定的场景下-如进行缓存预热的场景-，会有大批量的db数据同步到cache当中，这时，缓存当中便存在大量的过期时间相同的key，这些key如果同时失效的情况下，刚好有大规模的请求到来，就会穿透到db当中进行查询。"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">原因分析：我们在设置过期时间的时候，往往都是根据业务的需求，设置固定的过期时间，一般情况下，缓存都是逐步写入的，但在一些特定的场景下(如进行缓存预热的场景)，会有大批量的db数据同步到cache当中，这时，缓存当中便存在大量的过期时间相同的key，这些key如果同时失效的情况下，刚好有大规模的请求到来，就会穿透到db当中进行查询。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案：既然是因为大批量的数据过期时间一致，那我们的解决方案也是在这着手：设计缓存的过期时间时，使用公式：过期时间-baes-时间-随机时间。即相同业务数据写缓存时，在基础过期时间之上，再加一个随机的过期时间，让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对-DB-造成过大压力"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">解决方案：既然是因为大批量的数据过期时间一致，那我们的解决方案也是在这着手：设计缓存的过期时间时，使用公式：过期时间&#x3D;baes 时间+随机时间。即相同业务数据写缓存时，在基础过期时间之上，再加一个随机的过期时间，让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对 DB 造成过大压力</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存穿透"><span class="nav-number">1.3.2.</span> <span class="nav-text">缓存穿透</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题描述：缓存穿透的问题比较有意思一些，我们一般的思路是先访问缓存，如果缓存没有，我们就去数据库加载然后回写到缓存当中，但是如果查缓存的时候，这个key既不在缓存，也不在数据库，也就是说这个key压根就不存在，而用户可以采用肉鸡不断去轮询这个有漏洞的接口，这样就会持续访问db，去db当中查找数据，如果请求量大，也会导致IO的吞吐激增，导致db慢查询。"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">问题描述：缓存穿透的问题比较有意思一些，我们一般的思路是先访问缓存，如果缓存没有，我们就去数据库加载然后回写到缓存当中，但是如果查缓存的时候，这个key既不在缓存，也不在数据库，也就是说这个key压根就不存在，而用户可以采用肉鸡不断去轮询这个有漏洞的接口，这样就会持续访问db，去db当中查找数据，如果请求量大，也会导致IO的吞吐激增，导致db慢查询。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原因分析：缓存穿透问题主要是我们在设计缓存的时候，都是考虑正常查缓存的思维逻辑，而没有去思考像以上的这种特殊情况。"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">原因分析：缓存穿透问题主要是我们在设计缓存的时候，都是考虑正常查缓存的思维逻辑，而没有去思考像以上的这种特殊情况。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案：第一种解决方案是我们在db当中查询出来的是NULL值时，仍然保存再cache当中，只不过这个NULL我们可以采用一些特殊的值存储，这样下次访问cache的时候，只会返回这个特殊值，而不会访问db，进而保护了db；第二种解决方案是采用布隆过滤器，也就是缓存的过滤器，可以通过布隆过滤器判断这个key是否真的存在"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">解决方案：第一种解决方案是我们在db当中查询出来的是NULL值时，仍然保存再cache当中，只不过这个NULL我们可以采用一些特殊的值存储，这样下次访问cache的时候，只会返回这个特殊值，而不会访问db，进而保护了db；第二种解决方案是采用布隆过滤器，也就是缓存的过滤器，可以通过布隆过滤器判断这个key是否真的存在</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#避坑"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">避坑</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识扩展-布隆过滤器（BloomFilter-）"><span class="nav-number">1.3.3.</span> <span class="nav-text">知识扩展-布隆过滤器（BloomFilter ）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">1.3.4.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题描述：系统运行过程中，缓存雪崩是一个非常严重的问题。缓存雪崩是指部分缓存节点不可用，导致整个缓存体系甚至甚至服务系统不可用的情况。缓存雪崩按照缓存是否-rehash（即是否漂移）分两种情况："><span class="nav-number">1.3.4.1.</span> <span class="nav-text">问题描述：系统运行过程中，缓存雪崩是一个非常严重的问题。缓存雪崩是指部分缓存节点不可用，导致整个缓存体系甚至甚至服务系统不可用的情况。缓存雪崩按照缓存是否 rehash（即是否漂移）分两种情况：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原因分析：1-缓存不支持rehash的缓存雪崩问题，根据缓存读写模式可知，如果缓存不命中，会到db当中，请求，而db所能承受的请求量远远比不上缓存，请求量过大，就很容易造成-DB-过载，大量慢查询，最终阻塞甚至-Crash，从而导致服务异常。2-缓存支持rehash，设计缓存的时候，大部分人采用缓存的分布模式都是采用一致性的hash分布方式，在部分节点异常的情况下，采用rehash的策略，即把异常节点请求平均分散到其他缓存节点。在一般情况下，一致性-Hash-分布-rehash-策略可以很好得运行，但在较大的流量洪峰到临之时，如果大流量-key-比较集中，正好在某-1～2-个缓存节点，很容易将这些缓存节点的内存、网卡过载，缓存节点异常-Crash，然后这些异常节点下线，这些大流量-key-请求又被-rehash-到其他缓存节点，进而导致其他缓存节点也被过载-Crash，缓存异常持续扩散，最终导致整个缓存体系异常，无法对外提供服务。"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">原因分析：1.缓存不支持rehash的缓存雪崩问题，根据缓存读写模式可知，如果缓存不命中，会到db当中，请求，而db所能承受的请求量远远比不上缓存，请求量过大，就很容易造成 DB 过载，大量慢查询，最终阻塞甚至 Crash，从而导致服务异常。2.缓存支持rehash，设计缓存的时候，大部分人采用缓存的分布模式都是采用一致性的hash分布方式，在部分节点异常的情况下，采用rehash的策略，即把异常节点请求平均分散到其他缓存节点。在一般情况下，一致性 Hash 分布+rehash 策略可以很好得运行，但在较大的流量洪峰到临之时，如果大流量 key 比较集中，正好在某 1～2 个缓存节点，很容易将这些缓存节点的内存、网卡过载，缓存节点异常 Crash，然后这些异常节点下线，这些大流量 key 请求又被 rehash 到其他缓存节点，进而导致其他缓存节点也被过载 Crash，缓存异常持续扩散，最终导致整个缓存体系异常，无法对外提供服务。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案："><span class="nav-number">1.3.4.3.</span> <span class="nav-text">解决方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方案一，对业务-DB-的访问增加读写开关，当发现-DB-请求变慢、阻塞，慢请求超过阀值时，就会关闭读开关，部分或所有读-DB-的请求进行-failfast-立即返回，待-DB-恢复后再打开读开关。"><span class="nav-number">1.3.4.3.1.</span> <span class="nav-text">方案一，对业务 DB 的访问增加读写开关，当发现 DB 请求变慢、阻塞，慢请求超过阀值时，就会关闭读开关，部分或所有读 DB 的请求进行 failfast 立即返回，待 DB 恢复后再打开读开关。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案二，对缓存增加多个副本，缓存异常或请求-miss-后，再读取其他缓存副本，而且多个缓存副本尽量部署在不同机架，从而确保在任何情况下，缓存系统都会正常对外提供服务。"><span class="nav-number">1.3.4.3.2.</span> <span class="nav-text">方案二，对缓存增加多个副本，缓存异常或请求 miss 后，再读取其他缓存副本，而且多个缓存副本尽量部署在不同机架，从而确保在任何情况下，缓存系统都会正常对外提供服务。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案三，对缓存体系进行实时监控，当请求访问的慢速比超过阀值时，及时报警，通过机器替换、服务替换进行及时恢复；也可以通过各种自动故障转移策略，自动关闭异常接口、停止边缘服务、停止部分非核心功能措施，确保在极端场景下，核心功能的正常运行。"><span class="nav-number">1.3.4.3.3.</span> <span class="nav-text">方案三，对缓存体系进行实时监控，当请求访问的慢速比超过阀值时，及时报警，通过机器替换、服务替换进行及时恢复；也可以通过各种自动故障转移策略，自动关闭异常接口、停止边缘服务、停止部分非核心功能措施，确保在极端场景下，核心功能的正常运行。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据不一致"><span class="nav-number">1.3.5.</span> <span class="nav-text">数据不一致</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题描述：七大缓存经典问题的第四个问题是数据不一致。同一份数据，可能会同时存在-DB-和缓存之中。那就有可能发生，DB-和缓存的数据不一致。如果缓存有多个副本，多个缓存副本里的数据也可能会发生不一致现象。"><span class="nav-number">1.3.5.1.</span> <span class="nav-text">问题描述：七大缓存经典问题的第四个问题是数据不一致。同一份数据，可能会同时存在 DB 和缓存之中。那就有可能发生，DB 和缓存的数据不一致。如果缓存有多个副本，多个缓存副本里的数据也可能会发生不一致现象。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原因分析：不一致的问题大多跟缓存更新异常有关。比如更新-DB-后，写缓存失败，从而导致缓存中存的是老数据。另外，如果系统采用一致性-Hash-分布，同时采用-rehash-自动漂移策略，在节点多次上下线之后，也会产生脏数据。缓存有多个副本时，更新某个副本失败，也会导致这个副本的数据是老数据。"><span class="nav-number">1.3.5.2.</span> <span class="nav-text">原因分析：不一致的问题大多跟缓存更新异常有关。比如更新 DB 后，写缓存失败，从而导致缓存中存的是老数据。另外，如果系统采用一致性 Hash 分布，同时采用 rehash 自动漂移策略，在节点多次上下线之后，也会产生脏数据。缓存有多个副本时，更新某个副本失败，也会导致这个副本的数据是老数据。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案：-1"><span class="nav-number">1.3.5.3.</span> <span class="nav-text">解决方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方案一：cache-更新失败后，可以进行重试，如果重试失败，则将失败的-key-写入队列机服务，待缓存访问恢复后，将这些-key-从缓存删除。这些-key-在再次被查询时，重新从-DB-加载，从而保证数据的一致性。"><span class="nav-number">1.3.5.3.1.</span> <span class="nav-text">方案一：cache 更新失败后，可以进行重试，如果重试失败，则将失败的 key 写入队列机服务，待缓存访问恢复后，将这些 key 从缓存删除。这些 key 在再次被查询时，重新从 DB 加载，从而保证数据的一致性。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案二：缓存时间适当调短，让缓存数据及早过期后，然后从-DB-重新加载，确保数据的最终一致性。"><span class="nav-number">1.3.5.3.2.</span> <span class="nav-text">方案二：缓存时间适当调短，让缓存数据及早过期后，然后从 DB 重新加载，确保数据的最终一致性。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案三：不采用-rehash-漂移策略，而采用缓存分层策略，尽量避免脏数据产生。"><span class="nav-number">1.3.5.3.3.</span> <span class="nav-text">方案三：不采用 rehash 漂移策略，而采用缓存分层策略，尽量避免脏数据产生。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据并发竞争"><span class="nav-number">1.3.6.</span> <span class="nav-text">数据并发竞争</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#问题描述：互联网系统，线上流量较大，缓存访问中很容易出现数据并发竞争的现象。数据并发竞争，是指在高并发访问场景，一旦缓存访问没有找到数据，大量请求就会并发查询-DB，导致-DB-压力大增的现象。"><span class="nav-number">1.3.6.0.1.</span> <span class="nav-text">问题描述：互联网系统，线上流量较大，缓存访问中很容易出现数据并发竞争的现象。数据并发竞争，是指在高并发访问场景，一旦缓存访问没有找到数据，大量请求就会并发查询 DB，导致 DB 压力大增的现象。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#原因分析：数据并发竞争，主要是由于多个进程-线程中，有大量并发请求获取相同的数据，而这个数据-key-因为正好过期、被剔除等各种原因在缓存中不存在，这些进程-线程之间没有任何协调，然后一起并发查询-DB，请求那个相同的-key，最终导致-DB-压力大增。"><span class="nav-number">1.3.6.0.2.</span> <span class="nav-text">原因分析：数据并发竞争，主要是由于多个进程&#x2F;线程中，有大量并发请求获取相同的数据，而这个数据 key 因为正好过期、被剔除等各种原因在缓存中不存在，这些进程&#x2F;线程之间没有任何协调，然后一起并发查询 DB，请求那个相同的 key，最终导致 DB 压力大增。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案：-2"><span class="nav-number">1.3.6.1.</span> <span class="nav-text">解决方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方案一：是使用全局锁。如下图所示，即当缓存请求-miss-后，先尝试加全局锁，只有加全局锁成功的线程，才可以到-DB-去加载数据。其他进程-线程在读取缓存数据-miss-时，如果发现这个-key-有全局锁，就进行等待，待之前的线程将数据从-DB-回种到缓存后，再从缓存获取。"><span class="nav-number">1.3.6.1.1.</span> <span class="nav-text">方案一：是使用全局锁。如下图所示，即当缓存请求 miss 后，先尝试加全局锁，只有加全局锁成功的线程，才可以到 DB 去加载数据。其他进程&#x2F;线程在读取缓存数据 miss 时，如果发现这个 key 有全局锁，就进行等待，待之前的线程将数据从 DB 回种到缓存后，再从缓存获取。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案二：对缓存数据保持多个备份，即便其中一个备份中的数据过期或被剔除了，还可以访问其他备份，从而减少数据并发竞争的情况"><span class="nav-number">1.3.6.1.2.</span> <span class="nav-text">方案二：对缓存数据保持多个备份，即便其中一个备份中的数据过期或被剔除了，还可以访问其他备份，从而减少数据并发竞争的情况</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

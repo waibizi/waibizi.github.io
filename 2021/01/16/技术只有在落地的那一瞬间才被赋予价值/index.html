@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waibizi.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="技术只有在落地的那一瞬间才被赋予价值1.前言每一个程序员都追求着优秀的代码，然而在许多情况下，大多数程序员都有着自己“个性化”的“优秀准则”，虽然对于“什么是优秀的代码”我们并不会存在一个绝对的定义，但是一些优秀的代码显然会有一些让其他人阅读起来就感觉很舒服的感觉。 2.谈谈代码质量优秀的代码主要有以下特点：  容易理解； 没有明显的安全问题； 能够满足最关键的需求； 有充分的注释； 使用规范的命">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术只有在落地的那一瞬间才被赋予价值">
+<meta property="og:url" content="https://waibizi.github.io/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/index.html">
+<meta property="og:site_name" content="歪鼻子">
+<meta property="og:description" content="技术只有在落地的那一瞬间才被赋予价值1.前言每一个程序员都追求着优秀的代码，然而在许多情况下，大多数程序员都有着自己“个性化”的“优秀准则”，虽然对于“什么是优秀的代码”我们并不会存在一个绝对的定义，但是一些优秀的代码显然会有一些让其他人阅读起来就感觉很舒服的感觉。 2.谈谈代码质量优秀的代码主要有以下特点：  容易理解； 没有明显的安全问题； 能够满足最关键的需求； 有充分的注释； 使用规范的命">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/07/rBpUXl_LHxWAVuJVAAAngSVBHnQ787.png">
+<meta property="og:image" content="https://www.waibizi.com/group1/M00/00/07/rBpUXl_LH5mAcj5oAAE0rjjNhy4593.jpg">
+<meta property="article:published_time" content="2021-01-16T13:35:09.811Z">
+<meta property="article:modified_time" content="2021-01-16T13:53:33.191Z">
+<meta property="article:author" content="歪鼻子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.waibizi.com/group1/M00/00/07/rBpUXl_LHxWAVuJVAAAngSVBHnQ787.png">
+
+<link rel="canonical" href="https://waibizi.github.io/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>技术只有在落地的那一瞬间才被赋予价值 | 歪鼻子</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="歪鼻子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">歪鼻子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://waibizi.github.io/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          技术只有在落地的那一瞬间才被赋予价值
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:53:33" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="技术只有在落地的那一瞬间才被赋予价值"><a href="#技术只有在落地的那一瞬间才被赋予价值" class="headerlink" title="技术只有在落地的那一瞬间才被赋予价值"></a>技术只有在落地的那一瞬间才被赋予价值</h1><h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h2><p>每一个程序员都追求着优秀的代码，然而在许多情况下，大多数程序员都有着自己“个性化”的“优秀准则”，虽然对于“什么是优秀的代码”我们并不会存在一个绝对的定义，但是一些优秀的代码显然会有一些让其他人阅读起来就感觉很舒服的感觉。</p>
+<h2 id="2-谈谈代码质量"><a href="#2-谈谈代码质量" class="headerlink" title="2.谈谈代码质量"></a>2.谈谈代码质量</h2><p>优秀的代码主要有以下特点：</p>
+<ol>
+<li>容易理解；</li>
+<li>没有明显的安全问题；</li>
+<li>能够满足最关键的需求；</li>
+<li>有充分的注释；</li>
+<li>使用规范的命名；</li>
+<li>经过充分的测试；</li>
+</ol>
+<p>我们认为不优秀的代码有如下特点:</p>
+<ol>
+<li>难以阅读的代码；</li>
+<li>浪费大量计算机资源的代码；</li>
+<li>.代码风格混乱的代码；</li>
+<li>复杂的、不直观的代码；</li>
+<li>没有经过适当测试的代码  </li>
+</ol>
+<p>我的面试官跟我谈过：一个需求你就算用再高深的代码技术去实现，如果阅读性差，可维护性差，还不如采用简单的方式，以一种可阅读的方式编写这段代码。</p>
+<p>是的，开发不是你一个人单枪匹马，开发更要考虑的是team，优秀的代码我们可以理解是“经济”的代码，这里的经济指的是指的是使用较少的人力、物力、财力、时间、空间，来获取较大的成果或收益 。或者简单地说，投入少、收益大、投资回报高。  </p>
+ <a id="more"></a>
+
+<h2 id="3-代码质量与敏捷项目"><a href="#3-代码质量与敏捷项目" class="headerlink" title="3.代码质量与敏捷项目"></a>3.代码质量与敏捷项目</h2><p>对于软件的生命周期相信大家都是熟知的，是的，越完整的生命周期的确可以书写出优秀的代码，但是我们绝大多数情况下，项目都是敏捷性的，如果过分纠缠于这些代码指标，创始人的时间、投资人的金钱可能都没有办法得到最有效的使用。我以前对于代码指标是存在比较强迫的判断，在前些天与导师的讨论当中，导师提到了一句：技术只有在落地的那一瞬间才被赋予价值；也是本篇文章的标题，也正是这句话，让我重新思考了“什么才是真正优秀的代码”。</p>
+<div align="center">【最适合当前现实环境的代码，才是最优秀的代码】</div>
+
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/07/rBpUXl_LHxWAVuJVAAAngSVBHnQ787.png" height="50%" width="50%"></div>
+
+<p>在此之前，我仍认为，敏捷是代码质量的扼杀者，但我现在认为“最适合当前现实环境的代码，才是最优秀的代码”，是的，敏捷与代码质量并无冲突，技术只有在落地的那一刻才被赋予价值。当我们考虑具体投入的时候，还要考虑我们所处的现实环境。 如果我们超出现实环境去讨论代码的质量，有时候会有失偏颇，丧失我们讨论代码质量的意义 。</p>
+<h2 id="4-一些常见的编码规约"><a href="#4-一些常见的编码规约" class="headerlink" title="4.一些常见的编码规约"></a>4.一些常见的编码规约</h2><p>下面罗列一些常见的编码规约，可能部分与你长期遵守的编码规约有些许不同，但是这东西本来就不是一个绝对的标准，每个团队都有着适合自己团队的编码规约，仅供参考，若你有不同的意见，欢迎与我讨论</p>
+<h3 id="1-驼峰命名法"><a href="#1-驼峰命名法" class="headerlink" title="1.驼峰命名法"></a>1.驼峰命名法</h3><p>驼峰命名法指的是使用大小写混合的格式，单词之间不使用空格隔开或者连接字符连接的命名方式。它有两种格式：大驼峰命名法（UpperCamelCase）和小驼峰命名法（lowerCamelCase）。 </p>
+<p>大驼峰命名法的第一个单词以大写字母开始，其余的和小驼峰命名法相同。 比如：StudentInfo, TeacherInfo。  </p>
+<p>小驼峰命名法的第一个单词以小写字母开始，其他单词以大写字母开始，其余字母使用小写字母。 比如：studentInfo, toString。  </p>
+<h3 id="2-下划线命名法"><a href="#2-下划线命名法" class="headerlink" title="2.下划线命名法"></a>2.下划线命名法</h3><p>单词之间通过下划线“_”连接，比如“out_of_range”  </p>
+<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="Java命名规范"><a href="#Java命名规范" class="headerlink" title="Java命名规范"></a>Java命名规范</h3><table>
+<thead>
+<tr>
+<th>标识符类型</th>
+<th>适用命名方法</th>
+<th>正确示例</th>
+<th>错误示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>package</td>
+<td>适用名词，强制包名全部小写;不能使用连接符，使用单个单词作为包名</td>
+<td>java.io<br>com.example.mypackage</td>
+<td>com.waibizi.userManage<br>com.waibizi.my_package</td>
+</tr>
+<tr>
+<td>class<br>interface</td>
+<td>大驼峰命名法，使用名词或者名词短语，接口也可以使用形容词;避免使用缩略词</td>
+<td>String<br>LinkedList</td>
+<td>Runtimeexception<br>linkedList</td>
+</tr>
+<tr>
+<td>方法</td>
+<td>小驼峰命名法，通常使用动词或者动词短语，避免使用缩略词</td>
+<td>Runnable.run()<br>String.getBytes()</td>
+<td>String.GetBytes()<br>String.bytes()</td>
+</tr>
+<tr>
+<td>变量</td>
+<td>小驼峰命名法，避免使用单个字符的命名，例如a、b、c，命名应该具备意义,避免使用缩略词</td>
+<td>String charsetName<br>Integer age</td>
+<td>String c<br>String c1<br></td>
+</tr>
+<tr>
+<td>常量</td>
+<td>下划线命名法;使用大写字符</td>
+<td>Integer MAX_VALUE = 65536</td>
+<td>Integer max_value = 65536</td>
+</tr>
+</tbody></table>
+<h3 id="3-可读性优先"><a href="#3-可读性优先" class="headerlink" title="3.可读性优先"></a>3.可读性优先</h3><p>上面Java命名规范多次提到避免使用缩略词便是存储可读性优先，命名的可读性需要注意以下几点</p>
+<h4 id="1-可读性强的名字优先于简短的名字，尽量使用完整的词汇。"><a href="#1-可读性强的名字优先于简短的名字，尽量使用完整的词汇。" class="headerlink" title="1.可读性强的名字优先于简短的名字，尽量使用完整的词汇。"></a>1.可读性强的名字优先于简短的名字，尽量使用完整的词汇。</h4><h4 id="2-不要使用缩写、简写、缩略词，除非这些词语被广泛使用。"><a href="#2-不要使用缩写、简写、缩略词，除非这些词语被广泛使用。" class="headerlink" title="2.不要使用缩写、简写、缩略词，除非这些词语被广泛使用。"></a>2.不要使用缩写、简写、缩略词，除非这些词语被广泛使用。</h4><h4 id="3-不要使用太短的名字，除非是广泛接受的特例。"><a href="#3-不要使用太短的名字，除非是广泛接受的特例。" class="headerlink" title="3.不要使用太短的名字，除非是广泛接受的特例。"></a>3.不要使用太短的名字，除非是广泛接受的特例。</h4><h4 id="4-避免含糊、混淆或者误导。"><a href="#4-避免含糊、混淆或者误导。" class="headerlink" title="4.避免含糊、混淆或者误导。"></a>4.避免含糊、混淆或者误导。</h4><h3 id="4-tab键与空格键的相爱相杀"><a href="#4-tab键与空格键的相爱相杀" class="headerlink" title="4.tab键与空格键的相爱相杀"></a>4.tab键与空格键的相爱相杀</h3><p>无疑，这个东西是让广大程序员最具备争论的一点，就我目前的情况而已，我是用tab键都会选择格式化操作，即一个tab键是四个空格的大小这样去设置，在IDEA当中可以简单解决。</p>
+<div align="center"><img src="https://www.waibizi.com/group1/M00/00/07/rBpUXl_LH5mAcj5oAAE0rjjNhy4593.jpg" height="50%" width="50%"></div>
+
+<h3 id="5-代码换行原则"><a href="#5-代码换行原则" class="headerlink" title="5.代码换行原则"></a>5.代码换行原则</h3><p>1.每行代码字符数的限制。一般情况下，每行代码不要超出120个字符（当然有些规定是80个字符），主要看终端的宽度与屏幕的尺寸。</p>
+<p>2.如果一行不足以容纳一个表达式，就需要换行 。</p>
+<h2 id="5-小结"><a href="#5-小结" class="headerlink" title="5.小结"></a>5.小结</h2><p>今天的篇幅就到这为此啦，关于编码规范，可以参考【阿里巴巴开发手册】，当中罗列了许多的规范，但是我希望你能够从中整理出一份适合你自己团队的规约，因为最适合当前现实环境的代码，才是最优秀的代码。当然最后的最后，还要强调一下代码的【检查、评审、校验】真的很重要很重要。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E7%AB%AF%E7%82%B9%E7%BD%91%E7%BB%9C%E7%A7%91%E6%8A%80%E7%BC%96%E7%A8%8B%E9%A2%98/" rel="prev" title="端点网络科技编程题">
+      <i class="fa fa-chevron-left"></i> 端点网络科技编程题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E7%9B%B4%E6%8E%A5%E5%BE%80%E7%AE%80%E5%8E%86%E6%80%BC%E7%86%9F%E6%82%89go%20context%E5%90%A7%EF%BC%81/" rel="next" title="看完这篇文章，直接往简历怼熟悉go context吧！">
+      看完这篇文章，直接往简历怼熟悉go context吧！ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#技术只有在落地的那一瞬间才被赋予价值"><span class="nav-number">1.</span> <span class="nav-text">技术只有在落地的那一瞬间才被赋予价值</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-number">1.1.</span> <span class="nav-text">1.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-谈谈代码质量"><span class="nav-number">1.2.</span> <span class="nav-text">2.谈谈代码质量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-代码质量与敏捷项目"><span class="nav-number">1.3.</span> <span class="nav-text">3.代码质量与敏捷项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-一些常见的编码规约"><span class="nav-number">1.4.</span> <span class="nav-text">4.一些常见的编码规约</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-驼峰命名法"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.驼峰命名法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-下划线命名法"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.下划线命名法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#"><span class="nav-number">1.4.3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java命名规范"><span class="nav-number">1.4.4.</span> <span class="nav-text">Java命名规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-可读性优先"><span class="nav-number">1.4.5.</span> <span class="nav-text">3.可读性优先</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-可读性强的名字优先于简短的名字，尽量使用完整的词汇。"><span class="nav-number">1.4.5.1.</span> <span class="nav-text">1.可读性强的名字优先于简短的名字，尽量使用完整的词汇。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-不要使用缩写、简写、缩略词，除非这些词语被广泛使用。"><span class="nav-number">1.4.5.2.</span> <span class="nav-text">2.不要使用缩写、简写、缩略词，除非这些词语被广泛使用。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-不要使用太短的名字，除非是广泛接受的特例。"><span class="nav-number">1.4.5.3.</span> <span class="nav-text">3.不要使用太短的名字，除非是广泛接受的特例。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-避免含糊、混淆或者误导。"><span class="nav-number">1.4.5.4.</span> <span class="nav-text">4.避免含糊、混淆或者误导。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-tab键与空格键的相爱相杀"><span class="nav-number">1.4.6.</span> <span class="nav-text">4.tab键与空格键的相爱相杀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-代码换行原则"><span class="nav-number">1.4.7.</span> <span class="nav-text">5.代码换行原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-小结"><span class="nav-number">1.5.</span> <span class="nav-text">5.小结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">歪鼻子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">歪鼻子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
