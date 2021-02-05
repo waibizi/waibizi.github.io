@@ -1021,21 +1021,6 @@
 <h2 id="2-Consumer最佳实践"><a href="#2-Consumer最佳实践" class="headerlink" title="2.Consumer最佳实践"></a>2.Consumer最佳实践</h2>]]></content>
   </entry>
   <entry>
-    <title>Spring的切面编程与自定义注解，谁用谁觉得爽</title>
-    <url>/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/</url>
-    <content><![CDATA[<h1 id="Spring的切面编程与自定义注解，谁用谁觉得爽"><a href="#Spring的切面编程与自定义注解，谁用谁觉得爽" class="headerlink" title="Spring的切面编程与自定义注解，谁用谁觉得爽"></a>Spring的切面编程与自定义注解，谁用谁觉得爽</h1><h2 id="1-元注解"><a href="#1-元注解" class="headerlink" title="1.元注解"></a>1.元注解</h2><p>JDK从1.5开始对于注解（Annotation）开启了支持。这里不对注解进一步的解释含义。Java如果要实现自定义注解，首先要了解到的是元注解，元注解有以下四个。</p>
-<p>@Target</p>
-<p>用来描述注解使用的范围</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">TYPE, <span class="comment">// 类、接口、枚举类</span></span><br><span class="line"> </span><br><span class="line">FIELD, <span class="comment">// 成员变量（包括：枚举常量）</span></span><br><span class="line"> </span><br><span class="line">METHOD, <span class="comment">// 成员方法</span></span><br><span class="line"> </span><br><span class="line">PARAMETER, <span class="comment">// 方法参数</span></span><br><span class="line"> </span><br><span class="line">CONSTRUCTOR, <span class="comment">// 构造方法</span></span><br><span class="line"> </span><br><span class="line">LOCAL_VARIABLE, <span class="comment">// 局部变量</span></span><br><span class="line"> </span><br><span class="line">ANNOTATION_TYPE, <span class="comment">// 注解类</span></span><br><span class="line"> </span><br><span class="line">PACKAGE, <span class="comment">// 可用于修饰：包</span></span><br><span class="line"> </span><br><span class="line">TYPE_PARAMETER, <span class="comment">// 类型参数，JDK 1.8 新增</span></span><br><span class="line"> </span><br><span class="line">TYPE_USE <span class="comment">// 使用类型的任何地方，JDK 1.8 新增</span></span><br></pre></td></tr></table></figure>
-
- <a id="more"></a>
-
-<p>@Retention</p>
-<p>@Documented</p>
-<p>@Inherited</p>
-]]></content>
-  </entry>
-  <entry>
     <title>synchronized锁升级分析</title>
     <url>/2020/06/24/synchronized%E9%94%81%E5%8D%87%E7%BA%A7%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<h2 id="1-Mutex介绍"><a href="#1-Mutex介绍" class="headerlink" title="1.Mutex介绍"></a>1.Mutex介绍</h2><p>  <font color=" #FF8C00">Mutex</font>中文名称是<font color="#00FA9A">互斥锁</font>，跟着中文名称很好理解了，就是为了互斥;<br></p>

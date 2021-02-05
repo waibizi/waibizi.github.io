@@ -532,75 +532,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.waibizi.com/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="歪鼻子">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="歪鼻子">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/" class="post-title-link" itemprop="url">Spring的切面编程与自定义注解，谁用谁觉得爽</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:55:06" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Spring的切面编程与自定义注解，谁用谁觉得爽"><a href="#Spring的切面编程与自定义注解，谁用谁觉得爽" class="headerlink" title="Spring的切面编程与自定义注解，谁用谁觉得爽"></a>Spring的切面编程与自定义注解，谁用谁觉得爽</h1><h2 id="1-元注解"><a href="#1-元注解" class="headerlink" title="1.元注解"></a>1.元注解</h2><p>JDK从1.5开始对于注解（Annotation）开启了支持。这里不对注解进一步的解释含义。Java如果要实现自定义注解，首先要了解到的是元注解，元注解有以下四个。</p>
-<p>@Target</p>
-<p>用来描述注解使用的范围</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">TYPE, <span class="comment">// 类、接口、枚举类</span></span><br><span class="line"> </span><br><span class="line">FIELD, <span class="comment">// 成员变量（包括：枚举常量）</span></span><br><span class="line"> </span><br><span class="line">METHOD, <span class="comment">// 成员方法</span></span><br><span class="line"> </span><br><span class="line">PARAMETER, <span class="comment">// 方法参数</span></span><br><span class="line"> </span><br><span class="line">CONSTRUCTOR, <span class="comment">// 构造方法</span></span><br><span class="line"> </span><br><span class="line">LOCAL_VARIABLE, <span class="comment">// 局部变量</span></span><br><span class="line"> </span><br><span class="line">ANNOTATION_TYPE, <span class="comment">// 注解类</span></span><br><span class="line"> </span><br><span class="line">PACKAGE, <span class="comment">// 可用于修饰：包</span></span><br><span class="line"> </span><br><span class="line">TYPE_PARAMETER, <span class="comment">// 类型参数，JDK 1.8 新增</span></span><br><span class="line"> </span><br><span class="line">TYPE_USE <span class="comment">// 使用类型的任何地方，JDK 1.8 新增</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://www.waibizi.com/2021/01/16/SpringBoot+JWT%E5%AE%9E%E7%8E%B0%E6%97%A0%E6%9D%83%E9%99%90SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%B3%BB%E7%BB%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -880,6 +811,76 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.waibizi.com/2021/01/16/JDBC%E7%AC%94%E8%AF%95%E9%80%89%E6%8B%A9%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="歪鼻子">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="歪鼻子">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/16/JDBC%E7%AC%94%E8%AF%95%E9%80%89%E6%8B%A9%E9%A2%98/" class="post-title-link" itemprop="url">JDBC笔试选择题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-16 21:35:09 / Modified: 21:48:53" itemprop="dateCreated datePublished" datetime="2021-01-16T21:35:09+08:00">2021-01-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JDBC笔试选择题"><a href="#JDBC笔试选择题" class="headerlink" title="JDBC笔试选择题"></a>JDBC笔试选择题</h1><h2 id="1-JDBC-驱动程序有几种类型：-（-C）"><a href="#1-JDBC-驱动程序有几种类型：-（-C）" class="headerlink" title="1.JDBC 驱动程序有几种类型： （ C）"></a>1.JDBC 驱动程序有几种类型： （ C）</h2><p>A 两种                            B 三种                                C 四种                                        D 五种  </p>
+<p>解析：jdba-odbc桥接、本地API驱动、网络协议驱动和本地协议驱动</p>
+<h2 id="2-典型的-JDBC程序按（-D、B、E、C、F、A）顺序编写？"><a href="#2-典型的-JDBC程序按（-D、B、E、C、F、A）顺序编写？" class="headerlink" title="2.典型的 JDBC程序按（ D、B、E、C、F、A）顺序编写？"></a>2.典型的 JDBC程序按（ D、B、E、C、F、A）顺序编写？</h2><p>A 释放资源                                        B 获得与数据库的物理连接</p>
+<p>C 执行 SQL命令                                D 注册 JDBC Driver</p>
+<p>E 创建不同类型的 Statement            F 如果有结果集 , 处理结果集  </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/01/16/JDBC%E7%AC%94%E8%AF%95%E9%80%89%E6%8B%A9%E9%A2%98/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -949,7 +950,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">139</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
