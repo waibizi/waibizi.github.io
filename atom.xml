@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://waibizi.github.io/"/>
+  <link href="https://www.waibizi.com/"/>
   <updated>2021-01-16T13:51:04.699Z</updated>
-  <id>https://waibizi.github.io/</id>
+  <id>https://www.waibizi.com/</id>
   
   <author>
     <name>歪鼻子</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>谈谈Go的并发安全相关</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E8%B0%88%E8%B0%88Go%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3/</id>
     <published>2021-01-16T13:35:09.844Z</published>
     <updated>2021-01-16T13:51:04.699Z</updated>
     
@@ -42,8 +42,8 @@
   
   <entry>
     <title>谈谈GoLang当中的异常处理</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88GoLang%E5%BD%93%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E8%B0%88%E8%B0%88GoLang%E5%BD%93%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E8%B0%88%E8%B0%88GoLang%E5%BD%93%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E8%B0%88%E8%B0%88GoLang%E5%BD%93%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</id>
     <published>2021-01-16T13:35:09.843Z</published>
     <updated>2021-01-16T13:51:11.804Z</updated>
     
@@ -66,8 +66,8 @@
   
   <entry>
     <title>思迈特8道算法+2道设计模式机试题</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E6%80%9D%E8%BF%88%E7%89%B98%E9%81%93%E7%AE%97%E6%B3%95+2%E9%81%93%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%BA%E8%AF%95%E9%A2%98/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E6%80%9D%E8%BF%88%E7%89%B98%E9%81%93%E7%AE%97%E6%B3%95+2%E9%81%93%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%BA%E8%AF%95%E9%A2%98/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E6%80%9D%E8%BF%88%E7%89%B98%E9%81%93%E7%AE%97%E6%B3%95+2%E9%81%93%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%BA%E8%AF%95%E9%A2%98/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E6%80%9D%E8%BF%88%E7%89%B98%E9%81%93%E7%AE%97%E6%B3%95+2%E9%81%93%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%BA%E8%AF%95%E9%A2%98/</id>
     <published>2021-01-16T13:35:09.839Z</published>
     <updated>2021-01-16T13:51:23.303Z</updated>
     
@@ -87,8 +87,8 @@
   
   <entry>
     <title>使用GoLang实现一个简单的反向代理</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E4%BD%BF%E7%94%A8GoLang%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E4%BD%BF%E7%94%A8GoLang%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E4%BD%BF%E7%94%A8GoLang%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E4%BD%BF%E7%94%A8GoLang%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</id>
     <published>2021-01-16T13:35:09.833Z</published>
     <updated>2021-01-16T13:51:42.330Z</updated>
     
@@ -108,8 +108,8 @@
   
   <entry>
     <title>生产环境、测试环境、灰度环境、开发环境究竟是什么玩意？</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E3%80%81%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E3%80%81%E7%81%B0%E5%BA%A6%E7%8E%AF%E5%A2%83%E3%80%81%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88%E7%8E%A9%E6%84%8F%EF%BC%9F/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E3%80%81%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E3%80%81%E7%81%B0%E5%BA%A6%E7%8E%AF%E5%A2%83%E3%80%81%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88%E7%8E%A9%E6%84%8F%EF%BC%9F/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E3%80%81%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E3%80%81%E7%81%B0%E5%BA%A6%E7%8E%AF%E5%A2%83%E3%80%81%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88%E7%8E%A9%E6%84%8F%EF%BC%9F/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E3%80%81%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E3%80%81%E7%81%B0%E5%BA%A6%E7%8E%AF%E5%A2%83%E3%80%81%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88%E7%8E%A9%E6%84%8F%EF%BC%9F/</id>
     <published>2021-01-16T13:35:09.831Z</published>
     <updated>2021-01-16T13:51:53.746Z</updated>
     
@@ -132,8 +132,8 @@
   
   <entry>
     <title>什么是RESTful，SpringBoot怎么引入丝袜哥（Swagger）</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E4%BB%80%E4%B9%88%E6%98%AFRESTful%EF%BC%8CSpringBoot%E6%80%8E%E4%B9%88%E5%BC%95%E5%85%A5%E4%B8%9D%E8%A2%9C%E5%93%A5%EF%BC%88Swagger%EF%BC%89/</id>
     <published>2021-01-16T13:35:09.828Z</published>
     <updated>2021-01-16T13:52:06.156Z</updated>
     
@@ -156,8 +156,8 @@
   
   <entry>
     <title>某厂一道2sum的机试题,我竟然直接被淘汰了</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E6%9F%90%E5%8E%82%E4%B8%80%E9%81%932sum%E7%9A%84%E6%9C%BA%E8%AF%95%E9%A2%98,%E6%88%91%E7%AB%9F%E7%84%B6%E7%9B%B4%E6%8E%A5%E8%A2%AB%E6%B7%98%E6%B1%B0%E4%BA%86/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E6%9F%90%E5%8E%82%E4%B8%80%E9%81%932sum%E7%9A%84%E6%9C%BA%E8%AF%95%E9%A2%98,%E6%88%91%E7%AB%9F%E7%84%B6%E7%9B%B4%E6%8E%A5%E8%A2%AB%E6%B7%98%E6%B1%B0%E4%BA%86/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E6%9F%90%E5%8E%82%E4%B8%80%E9%81%932sum%E7%9A%84%E6%9C%BA%E8%AF%95%E9%A2%98,%E6%88%91%E7%AB%9F%E7%84%B6%E7%9B%B4%E6%8E%A5%E8%A2%AB%E6%B7%98%E6%B1%B0%E4%BA%86/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E6%9F%90%E5%8E%82%E4%B8%80%E9%81%932sum%E7%9A%84%E6%9C%BA%E8%AF%95%E9%A2%98,%E6%88%91%E7%AB%9F%E7%84%B6%E7%9B%B4%E6%8E%A5%E8%A2%AB%E6%B7%98%E6%B1%B0%E4%BA%86/</id>
     <published>2021-01-16T13:35:09.824Z</published>
     <updated>2021-01-16T13:48:32.066Z</updated>
     
@@ -179,8 +179,8 @@
   
   <entry>
     <title>看完这篇文章，面试官再问你分布式缓存千万别怂！！！！</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E5%8D%83%E4%B8%87%E5%88%AB%E6%80%82%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81/</id>
     <published>2021-01-16T13:35:09.818Z</published>
     <updated>2021-01-16T13:52:59.501Z</updated>
     
@@ -208,8 +208,8 @@
   
   <entry>
     <title>看完这篇文章，面试官再问你Template Method Pattern咱不怂他</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0Template%20Method%20Pattern%E5%92%B1%E4%B8%8D%E6%80%82%E4%BB%96/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0Template%20Method%20Pattern%E5%92%B1%E4%B8%8D%E6%80%82%E4%BB%96/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0Template%20Method%20Pattern%E5%92%B1%E4%B8%8D%E6%80%82%E4%BB%96/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E9%9D%A2%E8%AF%95%E5%AE%98%E5%86%8D%E9%97%AE%E4%BD%A0Template%20Method%20Pattern%E5%92%B1%E4%B8%8D%E6%80%82%E4%BB%96/</id>
     <published>2021-01-16T13:35:09.816Z</published>
     <updated>2021-01-16T13:53:07.878Z</updated>
     
@@ -229,8 +229,8 @@
   
   <entry>
     <title>剑指 Offer 59 - I. 滑动窗口的最大值</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E5%89%91%E6%8C%87%20Offer%2059%20-%20I.%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E5%89%91%E6%8C%87%20Offer%2059%20-%20I.%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E5%89%91%E6%8C%87%20Offer%2059%20-%20I.%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E5%89%91%E6%8C%87%20Offer%2059%20-%20I.%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC/</id>
     <published>2021-01-16T13:35:09.815Z</published>
     <updated>2021-01-16T13:53:17.349Z</updated>
     
@@ -251,9 +251,9 @@
   </entry>
   
   <entry>
-    <title>看完这篇文章，直接往简历怼熟悉go context吧！</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E7%9B%B4%E6%8E%A5%E5%BE%80%E7%AE%80%E5%8E%86%E6%80%BC%E7%86%9F%E6%82%89go%20context%E5%90%A7%EF%BC%81/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E7%9C%8B%E5%AE%8C%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%EF%BC%8C%E7%9B%B4%E6%8E%A5%E5%BE%80%E7%AE%80%E5%8E%86%E6%80%BC%E7%86%9F%E6%82%89go%20context%E5%90%A7%EF%BC%81/</id>
+    <title>浅析go context！</title>
+    <link href="https://www.waibizi.com/2021/01/16/%E6%B5%85%E6%9E%90go%20context%EF%BC%81/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E6%B5%85%E6%9E%90go%20context%EF%BC%81/</id>
     <published>2021-01-16T13:35:09.812Z</published>
     <updated>2021-01-16T13:48:21.442Z</updated>
     
@@ -271,8 +271,8 @@
   
   <entry>
     <title>技术只有在落地的那一瞬间才被赋予价值</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E6%8A%80%E6%9C%AF%E5%8F%AA%E6%9C%89%E5%9C%A8%E8%90%BD%E5%9C%B0%E7%9A%84%E9%82%A3%E4%B8%80%E7%9E%AC%E9%97%B4%E6%89%8D%E8%A2%AB%E8%B5%8B%E4%BA%88%E4%BB%B7%E5%80%BC/</id>
     <published>2021-01-16T13:35:09.811Z</published>
     <updated>2021-01-16T13:53:33.191Z</updated>
     
@@ -309,8 +309,8 @@
   
   <entry>
     <title>端点网络科技编程题</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E7%AB%AF%E7%82%B9%E7%BD%91%E7%BB%9C%E7%A7%91%E6%8A%80%E7%BC%96%E7%A8%8B%E9%A2%98/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E7%AB%AF%E7%82%B9%E7%BD%91%E7%BB%9C%E7%A7%91%E6%8A%80%E7%BC%96%E7%A8%8B%E9%A2%98/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E7%AB%AF%E7%82%B9%E7%BD%91%E7%BB%9C%E7%A7%91%E6%8A%80%E7%BC%96%E7%A8%8B%E9%A2%98/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E7%AB%AF%E7%82%B9%E7%BD%91%E7%BB%9C%E7%A7%91%E6%8A%80%E7%BC%96%E7%A8%8B%E9%A2%98/</id>
     <published>2021-01-16T13:35:09.801Z</published>
     <updated>2021-01-16T13:54:20.449Z</updated>
     
@@ -331,8 +331,8 @@
   
   <entry>
     <title>单点登录就是这么简单</title>
-    <link href="https://waibizi.github.io/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/"/>
-    <id>https://waibizi.github.io/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</id>
+    <link href="https://www.waibizi.com/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/"/>
+    <id>https://www.waibizi.com/2021/01/16/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</id>
     <published>2021-01-16T13:35:09.799Z</published>
     <updated>2021-01-16T13:54:27.265Z</updated>
     
@@ -355,8 +355,8 @@
   
   <entry>
     <title>Spring定时、cron表达式详解</title>
-    <link href="https://waibizi.github.io/2021/01/16/Spring%E5%AE%9A%E6%97%B6%E3%80%81cron%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://waibizi.github.io/2021/01/16/Spring%E5%AE%9A%E6%97%B6%E3%80%81cron%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/</id>
+    <link href="https://www.waibizi.com/2021/01/16/Spring%E5%AE%9A%E6%97%B6%E3%80%81cron%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://www.waibizi.com/2021/01/16/Spring%E5%AE%9A%E6%97%B6%E3%80%81cron%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/</id>
     <published>2021-01-16T13:35:09.790Z</published>
     <updated>2021-01-16T13:54:53.599Z</updated>
     
@@ -375,8 +375,8 @@
   
   <entry>
     <title>Spring的切面编程与自定义注解，谁用谁觉得爽</title>
-    <link href="https://waibizi.github.io/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/"/>
-    <id>https://waibizi.github.io/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/</id>
+    <link href="https://www.waibizi.com/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/"/>
+    <id>https://www.waibizi.com/2021/01/16/Spring%E7%9A%84%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8C%E8%B0%81%E7%94%A8%E8%B0%81%E8%A7%89%E5%BE%97%E7%88%BD/</id>
     <published>2021-01-16T13:35:09.788Z</published>
     <updated>2021-01-16T13:55:06.989Z</updated>
     
@@ -397,8 +397,8 @@
   
   <entry>
     <title>SpringBoot+JWT实现无权限SSO单点登录系统</title>
-    <link href="https://waibizi.github.io/2021/01/16/SpringBoot+JWT%E5%AE%9E%E7%8E%B0%E6%97%A0%E6%9D%83%E9%99%90SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%B3%BB%E7%BB%9F/"/>
-    <id>https://waibizi.github.io/2021/01/16/SpringBoot+JWT%E5%AE%9E%E7%8E%B0%E6%97%A0%E6%9D%83%E9%99%90SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%B3%BB%E7%BB%9F/</id>
+    <link href="https://www.waibizi.com/2021/01/16/SpringBoot+JWT%E5%AE%9E%E7%8E%B0%E6%97%A0%E6%9D%83%E9%99%90SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%B3%BB%E7%BB%9F/"/>
+    <id>https://www.waibizi.com/2021/01/16/SpringBoot+JWT%E5%AE%9E%E7%8E%B0%E6%97%A0%E6%9D%83%E9%99%90SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%B3%BB%E7%BB%9F/</id>
     <published>2021-01-16T13:35:09.786Z</published>
     <updated>2021-01-16T13:55:14.964Z</updated>
     
@@ -419,8 +419,8 @@
   
   <entry>
     <title>RocketMQ最佳实践</title>
-    <link href="https://waibizi.github.io/2021/01/16/RocketMQ%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
-    <id>https://waibizi.github.io/2021/01/16/RocketMQ%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</id>
+    <link href="https://www.waibizi.com/2021/01/16/RocketMQ%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
+    <id>https://www.waibizi.com/2021/01/16/RocketMQ%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</id>
     <published>2021-01-16T13:35:09.784Z</published>
     <updated>2021-01-16T13:55:22.013Z</updated>
     
@@ -449,8 +449,8 @@
   
   <entry>
     <title>RequestContextHolder持有上下文的Request容器详解</title>
-    <link href="https://waibizi.github.io/2021/01/16/RequestContextHolder%E6%8C%81%E6%9C%89%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84Request%E5%AE%B9%E5%99%A8%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://waibizi.github.io/2021/01/16/RequestContextHolder%E6%8C%81%E6%9C%89%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84Request%E5%AE%B9%E5%99%A8%E8%AF%A6%E8%A7%A3/</id>
+    <link href="https://www.waibizi.com/2021/01/16/RequestContextHolder%E6%8C%81%E6%9C%89%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84Request%E5%AE%B9%E5%99%A8%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://www.waibizi.com/2021/01/16/RequestContextHolder%E6%8C%81%E6%9C%89%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84Request%E5%AE%B9%E5%99%A8%E8%AF%A6%E8%A7%A3/</id>
     <published>2021-01-16T13:35:09.783Z</published>
     <updated>2021-01-16T13:48:43.928Z</updated>
     
@@ -469,8 +469,8 @@
   
   <entry>
     <title>MyBatis分页</title>
-    <link href="https://waibizi.github.io/2021/01/16/MyBatis%E5%88%86%E9%A1%B5/"/>
-    <id>https://waibizi.github.io/2021/01/16/MyBatis%E5%88%86%E9%A1%B5/</id>
+    <link href="https://www.waibizi.com/2021/01/16/MyBatis%E5%88%86%E9%A1%B5/"/>
+    <id>https://www.waibizi.com/2021/01/16/MyBatis%E5%88%86%E9%A1%B5/</id>
     <published>2021-01-16T13:35:09.779Z</published>
     <updated>2021-01-16T13:55:47.655Z</updated>
     
